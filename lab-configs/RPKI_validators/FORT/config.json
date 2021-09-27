@@ -1,0 +1,50 @@
+{
+	"tal": "/var/fort/tal",
+	"local-repository": "/var/fort/repository",
+	"rsync-strategy": "root",
+	"shuffle-uris": true,
+	"mode": "server",
+
+	"server": {
+		"port": "323",
+		"backlog": 16,
+		"interval": {
+	            "validation": 900,
+	            "refresh": 900,
+	            "retry": 600,
+	            "expire": 7200
+	        }
+	},
+
+	"log": {
+		"color-output": true,
+		"file-name-format": "file-name"
+	},
+
+	"rsync": {
+		"program": "rsync",
+		"arguments-recursive": [
+			"--recursive",
+			"--times",
+			"$REMOTE",
+			"$LOCAL"
+		],
+		"arguments-flat": [
+			"--times",
+			"--dirs",
+			"$REMOTE",
+			"$LOCAL"
+		]
+	},
+
+	"incidences": [
+		{
+			"name": "incid-hashalg-has-params",
+			"action": "ignore"
+		}
+	],
+
+	"output": {
+		"roa": "/var/fort/fort_roas.csv"
+	}
+}
