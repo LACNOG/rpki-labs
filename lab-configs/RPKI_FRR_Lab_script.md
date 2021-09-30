@@ -134,16 +134,11 @@ drwxr-xr-x 2 root root   7 Sep 20 15:10 .
 
 Ahora actualizaremos los archivos con los TALs descargándolos nuevamente de los 5 RIRs, utilizando el siguiente comando:
 
-> Notar que el comando contiene el formato necesario para intentar evitar el mensaje de confirmación al descargar el TAL de ARIN
->
-
 ```
-root@rpki1:~# printf 'yes\n' | fort --init-tals --tal /var/fort/tal
+root@rpki1:~# fort --init-tals --tal /var/fort/tal
 ```
 
 ```
-root@rpki1:~# printf 'yes\n' | fort --init-tals --tal /var/fort/tal
-
 Sep 27 18:11:44 DBG: HTTP GET: https://rpki.afrinic.net/tal/afrinic.tal
 Successfully fetched '/var/fort/tal/afrinic.tal'!
 

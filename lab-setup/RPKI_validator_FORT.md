@@ -21,8 +21,8 @@
 ### Get all needed packages
 
 ```
-# apt-get update
-# apt-get -y --no-install-recommends install \
+# apt update
+# apt -y --no-install-recommends install \
        autoconf automake build-essential git libjansson-dev \
        libssl-dev pkg-config rsync ca-certificates curl \
        libcurl4-openssl-dev libxml2-dev \
@@ -49,9 +49,9 @@
 ### Create directories to store FORT config (and other) files
 
 ```
-mkdir -p /etc/fort
-mkdir -p /var/fort/tal
-mkdir -p /var/fort/repository
+# mkdir -p /etc/fort
+# mkdir -p /var/fort/tal
+# mkdir -p /var/fort/repository
 ```
 
 
@@ -69,7 +69,7 @@ mkdir -p /var/fort/repository
 Get TALs and store them in */var/fort/tal* directory
 
 ```
-printf 'yes\n' | fort --init-tals --tal /var/fort/tal
+# fort --init-tals --tal /var/fort/tal
 ```
 
 
@@ -77,7 +77,7 @@ printf 'yes\n' | fort --init-tals --tal /var/fort/tal
 Check /var/fort/tals directory and look for all five RIR TALs files:
 
 ```
-ls -larth /var/fort/tal
+# ls -larth /var/fort/tal
 ```
 
 ```
@@ -93,7 +93,7 @@ ls -larth /var/fort/tal
 If ARIN's TAL is not present, download it (you'll have to accept ARIN's policy in order to be able to download):
 
 ```
-curl -k -o /var/fort/tal/arin.tal https://www.arin.net/resources/manage/rpki/arin-rfc7730.tal
+# curl -k -o /var/fort/tal/arin.tal https://www.arin.net/resources/manage/rpki/arin-rfc7730.tal
 ```
 
 
@@ -186,14 +186,20 @@ Let's create our */lib/systemd/system/fortd.service* file:
 
 ```
 [Unit]
-Description=FORT service (fort) - FORT RPKI validator
-After=graphical.target
+Description=FORT_RPKI_validator
+After=network.target
 
 [Service]
 Type=simple
+WorkingDirectory=/usr/local/bin
 ExecStart=/usr/local/bin/fort --configuration-file=/etc/fort/config.json
 StandardOutput=append:/var/log/fortd.log
 StandardError=append:/var/log/fortd.log
+SyslogIdentifier=FORT_RPKI_validator
+TimeoutStartSec=10
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
