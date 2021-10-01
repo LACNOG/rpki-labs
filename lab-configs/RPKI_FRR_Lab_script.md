@@ -2,9 +2,7 @@
 
 ------
 
-***Created and tested by Nicolas Antoniello*** (*@nantoniello*)
-
-> (2021-09-20)
+> 
 
 ------
 
