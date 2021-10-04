@@ -4,9 +4,9 @@
 
 ***Creado por:***
 
-***Santiago Aggio***
-***Nicolas Antoniello*** (*GitHub: 65007*)
-***Guillermo Cicileo***
+***Santiago Aggio***,
+***Nicolas Antoniello*** (*GitHub: 65007*),
+***Guillermo Cicileo,***
 ***Erika Vega***
 
 > (2021-08-11)
