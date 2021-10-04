@@ -378,7 +378,7 @@ Para evitar sobrecargar todos los routers de los grupos y el laboratorio en gene
 
 
 
-## Verificando la configuración inicial de los routers de borde de los equipos y configurando los mismos para BGP y RPKI
+## Verificando la configuración inicial de los routers de borde de los equipos
 
 Verificamos la configuración inicial del router de borde correspondiente a nuestro equipo (**grpX-rtr**):
 
@@ -609,6 +609,31 @@ router bgp 650XX
 
 
 
+Visualizamos el estado de las sesiones BGP (IPv6)
+
+```
+grp2-rtr# sh bgp ipv6 unicast summary 
+BGP router identifier 100.64.1.2, local AS number 65002 vrf-id 0
+BGP table version 557
+RIB entries 88, using 16 KiB of memory
+Peers 1, using 723 KiB of memory
+
+Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
+fd4a:7fe0::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
+
+Total number of neighbors 1
+```
+
+
+
+Visualizamos el estado de la tabla BGP (IPv6)
+
+```
+
+```
+
+
+
 #### Agregamos la configuración para conectar el router con nuestro validador RPKI
 
 Para conectar el router al validador RPKI podemos utilizar la dirección IPv4 del validador o el nombre de dominio del mismo... en este caso utilizaremos las direcciones IPv4:
@@ -633,7 +658,253 @@ En este punto, ya tenemos completamente configurado nuestro router de borde y po
 
 
 
-## Visualización de la configuración del validador RPKI
+#### Visualización de la configuración del validador RPKI
+
+```
+grp2-rtr# sh rpki cache-connection 
+Connected to group 1
+rpki tcp cache 100.64.0.70 323 pref 1
+```
+
+
+
+#### Visualización del estado de validación de un prefijo en particular
+
+```
+grp2-rtr# sh rpki prefix 2001:13c7:7002::/48
+Prefix                                   Prefix Length  Origin-AS
+2001:13c7:7002::                            48 -  48        28001
+```
+
+
+
+#### Visualizamos el estado de la tabla BGP (IPv6)
+
+```
+grp1-rtr# sh bgp ipv6 unicast
+BGP table version is 8453, local router ID is 100.64.1.1, vrf id 0
+Default local pref 100, local AS 65001
+Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
+               i internal, r RIB-failure, S Stale, R Removed
+Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
+Origin codes:  i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+   Network          Next Hop            Metric LocPrf Weight Path
+V*> 2001:7fb:fd02::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 8455 12654 i
+V*> 2001:7fb:fe00::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 30781 204092 12654 i
+V*> 2001:7fb:fe01::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 9002 12654 i
+V*> 2001:7fb:fe03::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 8455 12654 i
+V*> 2001:7fb:fe04::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 25091 513 12654 i
+```
+
+
+
+
+
+## Analysis de un prefijo particular a modo de demostración
+
+Visualizamos el prefijo 2001:7fb:fd02::1 en la tabla BGP
+
+```
+grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+BGP routing table entry for 2001:7fb:fd02::/48, version 2960
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  fd4a:7fe0::10
+  65000 64512 264759 7049 3549 3356 8455 12654
+    fd4a:7fe0::10 from fd4a:7fe0::10 (100.64.0.10)
+    (fe80::216:3eff:fee0:2b4b) (used)
+      Origin IGP, valid, external, best (First path received), rpki validation-state: valid
+      Last update: Mon Oct  4 21:34:09 2021
+```
+
+* ***¿Qué sucede con el estado de validación?***
+* ***¿Que ASN origina el prefijo?***
+
+
+
+
+
+Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (2001:7fb:fd02::1) y lo dejamos ejecutando
+
+```
+root@cli:~# mtr 2001:7fb:fd02::1
+
+cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:06:48+0000
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                               Packets               Pings
+ Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. fd4a:7fe0:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 2. fd4a:7fe0::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
+ 3. fd4a:7fe0::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 4. (waiting for reply)
+ 5. (waiting for reply)
+ 6. (waiting for reply)
+ 7. 2620:107:4000:cfff::f3ff:1e61             0.0%    10    0.8   0.8   0.7   1.0   0.1
+ 8. 2620:107:4000:c5e0::f3fd:c02              0.0%    10    0.7   0.7   0.6   0.8   0.1
+ 9. 2620:107:4000:a710::f000:3013             0.0%    10    0.7   0.8   0.7   0.9   0.0
+10. 2620:107:4000:a710::f000:3005             0.0%    10    0.9   0.9   0.8   1.0   0.1
+11. 2620:107:4000:cfff::f200:baa1             0.0%    10    0.7   1.5   0.5   5.5   1.6
+12. 2620:107:4000:2000::b3                    0.0%    10    0.9   4.0   0.6  15.0   5.4
+13. 2620:107:4000:8002::26                    0.0%    10    0.7   1.3   0.6   6.4   1.8
+14. 2620:107:4008:575::2                      0.0%    10    0.8   0.9   0.8   1.3   0.1
+15. ae27.mpr1.cdg11.fr.zip.zayo.com           0.0%     9   84.4  79.2  78.3  84.4   2.0
+16. ae10.tcr2.th2.par.core.as8218.eu          0.0%     9   78.2  81.3  78.2 103.9   8.5
+17. 2001:1b48:2:3::24:1                       0.0%     9   78.4  78.8  78.4  80.4   0.8
+18. 2001:7fb:fd02::1                          0.0%     9   90.8  90.8  90.7  90.8   0.0
+   
+```
+
+
+
+Ahora aguardamos a que los instructores realicen unas modificaciones... observando que sucede con el MTR.
+
+> Discusión
+
+- ***¿Qué se observa?***
+- Intente refrescar el mtr (*presionando la letra "r"*)
+
+```
+cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:25:36+0000
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                               Packets               Pings
+ Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. fd4a:7fe0:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
+ 2. fd4a:7fe0::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
+ 3. 2001:7fb:fd02::1                          0.0%   130    0.2   0.1   0.1   0.4   0.1
+```
+
+
+
+Visualizamos el prefijo en nuestra tabla BGP
+
+```
+grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+BGP routing table entry for 2001:7fb:fd02::/64, version 8495
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  fd4a:7fe0::10
+  65000 65002
+    fd4a:7fe0:0:1::2 from fd4a:7fe0::10 (100.64.0.10)
+    (fe80::216:3eff:fee0:2b4b) (used)
+      Origin IGP, valid, external, best (First path received), rpki validation-state: invalid
+      Last update: Mon Oct  4 22:22:12 2021
+```
+
+
+
+* ***¿Qué sucede con el estado de validación?***
+* ***¿Que ASN origina el prefijo?***
+* ***¿Qué sucedió?***
+* Entonces, si el estado es Invalido y tengo activado RPKI, ***¿por qué sigo viendo el prefijo en mi tabla BGP?***.
+
+
+
+### Configurando filtros BGP basados en el estado de validación
+
+Aplicamos el filtro "RPKI" que solo instalará en la tabla BGP los prefijos con estado "valid" o "not found" (descartando los "invalid")
+
+```
+grp1-rtr# conf t
+grp1-rtr(config)# router bgp 65001
+grp1-rtr(config-router)# address-family ipv6 unicast
+grp1-rtr(config-router-af)# neighbor fd4a:7fe0::10 route-map RPKI in
+```
+
+
+
+Visualizamos el prefijo en nuestra tabla BGP
+
+```
+grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+BGP routing table entry for 2001:7fb:fd02::/48, version 8503
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  fd4a:7fe0::10
+  65000 64512 264759 7049 3549 3356 8455 12654
+    fd4a:7fe0::10 from fd4a:7fe0::10 (100.64.0.10)
+    (fe80::216:3eff:fee0:2b4b) (used)
+      Origin IGP, localpref 200, valid, external, best (First path received), rpki validation-state: valid
+      Last update: Mon Oct  4 22:48:00 2021
+```
+
+
+
+* ***¿Qué sucede con el estado de validación?***
+* ***¿Que ASN origina el prefijo?***
+* ***¿Qué sucedió?***
+
+
+
+En el cliente visualizamos nuevamente el MTR, intente refrescarlo (presionando la letra "r")
+
+```
+cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:50:51+0000
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                               Packets               Pings
+ Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. fd4a:7fe0:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
+ 2. fd4a:7fe0::10                             0.0%     8    0.2   0.1   0.1   0.2   0.0
+ 3. 2001:7fb:fd02::1                          0.0%     7    0.2   0.2   0.1   0.2   0.0
+
+```
+
+* ***¿Qué sucede? ¿Cómo lo explica?***
+
+  (Tip: recordar la topología de red y quien provee la conectividad a Internet)
+
+
+
+### Los tutores procederán a habilitar filtros RPKI similares en el router iborder-rtr (ANS 65000)
+
+Los tutores aplican el filtro RPKI en el router de borde.
+
+
+
+Accedemos al cliente y visualizamos lo que sucede. Intente refrescarlo (presionando la letra "r")
+
+```
+cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T23:09:10+0000
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                               Packets               Pings
+ Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. fd4a:7fe0:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 2. fd4a:7fe0::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 3. fd4a:7fe0::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
+ 4. (waiting for reply)
+ 5. (waiting for reply)
+ 6. (waiting for reply)
+ 7. 2620:107:4000:cfff::f3ff:c41              0.0%    20    0.6   0.7   0.6   0.9   0.1
+ 8. 2620:107:4000:cfff::f200:9850             0.0%    20    0.9   0.8   0.7   0.9   0.1
+ 9. 2620:107:4000:a5d0::f000:2010             0.0%    20    0.7   0.8   0.7   0.9   0.1
+10. 2620:107:4000:a5d0::f000:2006             0.0%    20    0.8  57.6   0.8 261.1  87.4
+11. 2620:107:4000:cfff::f200:9b31             0.0%    20    0.6   2.1   0.5  19.9   5.0
+12. 2620:107:4000:2000::dd                    0.0%    20    1.0   1.4   0.7   5.2   1.0
+13. 2620:107:4000:8002::224                   0.0%    20    0.8   2.6   0.7  19.5   4.5
+14. 2620:107:4008:b974::2                     0.0%    20    0.9   0.9   0.8   1.1   0.1
+15. ae27.mpr1.cdg11.fr.zip.zayo.com           0.0%    20   78.4  80.5  78.3 102.6   5.3
+16. ae10.tcr2.th2.par.core.as8218.eu          0.0%    20   78.3  78.4  78.3  78.8   0.1
+17. 2001:1b48:2:3::24:1                       0.0%    19   78.4  78.5  78.3  79.2   0.2
+18. 2001:7fb:fd02::1                          0.0%    19   91.1  90.9  90.9  91.2   0.1
+
+```
+
+
+
+***¿Conclusiones?***
+
+> Discutir como se resolvió el secuestro de rutas en este caso.
 
 
 
