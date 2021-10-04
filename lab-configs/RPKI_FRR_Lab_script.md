@@ -2,7 +2,14 @@
 
 ------
 
-> 
+***Creado por:***
+
+***Santiago Aggio***
+***Nicolas Antoniello*** (*GitHub: 65007*)
+***Guillermo Cicileo***
+***Erika Vega***
+
+> (2021-08-11)
 
 ------
 
@@ -327,6 +334,7 @@ ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 10 permit _28000_
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 20 permit _28001_
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 30 permit _12654_
+bgp as-path access-list AS-PATH-PERMIT-LIST seq 40 permit _196615_
 !
 route-map NADA-IPv4 permit 10
  match ip address prefix-list DENY-ALL-IPv4
@@ -343,19 +351,26 @@ route-map TODO-IPv4 permit 10
 route-map TODO-IPv6 permit 10
  match ipv6 address prefix-list PERMIT-ALL-IPv6
 !
+route-map RPKI permit 10
+ match rpki valid
+ set local-preference 200
+!
+route-map RPKI permit 20
+ match rpki notfound
+ set local-preference 100
+!
 line vty
 !
+end
 ```
 
 
 
-> Vemos que este router de borde tiene una sesión BGP establecida con un ISP del cual recibe la tabla global IPv4 e IPv6.
->
-> También están pre-configuradas en este router de borde, sesiones BGP con cada uno de los router de borde de los grupos, a la espera de que estos configuren las sesiones BGP de su lado.
->
-> Para evitar sobrecargar todos los routers de los grupos y el laboratorio en general, se aplicó un filtro que solamente permitirá a BGP poner algunos prefijos (correspondientes a ciertos ASNs) en las tablas BGP (tanto IPv4 como IPv6).
->
-> Notar también que para este laboratorio estaremos utilizando solamente los prefijos IPv6 de modo que no es necesario realizar ninguna configuración adicional el IPv4 en lo que resta del laboratorio (siendo esta totalmente opcional por parte de los grupos).
+Vemos que este router de borde tiene una sesión BGP establecida con un ISP del cual recibe la tabla global IPv4 e IPv6.
+
+También están pre-configuradas en este router de borde, sesiones BGP con cada uno de los router de borde de los grupos, a la espera de que estos configuren las sesiones BGP de su lado.
+
+Para evitar sobrecargar todos los routers de los grupos y el laboratorio en general, se aplicó un filtro que solamente permitirá a BGP poner algunos prefijos (correspondientes a ciertos ASNs) en las tablas BGP (tanto IPv4 como IPv6).
 
 
 
@@ -415,7 +430,7 @@ end
 
 
 
-Ahora, modificamos la configuración del router correspondiente a nuestro equipo, para que resulte la siguiente:
+Ahora, modificamos la configuración del router correspondiente a nuestro equipo, para que resulte la siguiente (*el detalle de los pasos de configuración se encuentra más abajo*):
 
 ```
 grpX-rtr# sh run
@@ -493,19 +508,132 @@ ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
 route-map PERMIT-SOME-ASN permit 10
  match as-path AS-PATH-PERMIT-LIST
 !
+route-map TODO-IPv6 permit 10
+ match ipv6 address prefix-list PERMIT-ALL-IPv6
+!
 route-map NADA-IPv6 permit 10
  match ipv6 address prefix-list DENY-ALL-IPv6
 !
 route-map TODO-IPv4 permit 10
  match ip address prefix-list PERMIT-ALL-IPv4
 !
-route-map TODO-IPv6 permit 10
- match ipv6 address prefix-list PERMIT-ALL-IPv6
+route-map NADA-IPv4 permit 10
+ match ipv6 address prefix-list DENY-ALL-IPv4
+!
+route-map RPKI permit 10
+ match rpki valid
+ set local-preference 200
+!
+route-map RPKI permit 20
+ match rpki notfound
+ set local-preference 100
 !
 line vty
 !
 end
 ```
+
+
+
+#### Agregamos entonces algunos route-map y listas de acceso que utilizaremos más tarde
+
+> Los siguientes los iremos explicando a medida que los utilicemos durante la práctica
+>
+
+```
+ip prefix-list DENY-ALL-IPv4 seq 5 deny any
+ip prefix-list PERMIT-ALL-IPv4 seq 5 permit any
+!
+ipv6 prefix-list DENY-ALL-IPv6 seq 5 deny any
+ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
+!
+route-map PERMIT-SOME-ASN permit 10
+ match as-path AS-PATH-PERMIT-LIST
+!
+route-map TODO-IPv6 permit 10
+ match ipv6 address prefix-list PERMIT-ALL-IPv6
+!
+route-map NADA-IPv6 permit 10
+ match ipv6 address prefix-list DENY-ALL-IPv6
+!
+route-map TODO-IPv4 permit 10
+ match ip address prefix-list PERMIT-ALL-IPv4
+!
+route-map NADA-IPv4 permit 10
+ match ipv6 address prefix-list DENY-ALL-IPv4
+!
+route-map RPKI permit 10
+ match rpki valid
+ set local-preference 200
+!
+route-map RPKI permit 20
+ match rpki notfound
+ set local-preference 100
+```
+
+
+
+#### Configuramos la sesión BGP con el router de borde (**iborder-rtr**)
+
+> Observar que nuestro sistema autónomo será el 650XX cambiando la XX por nuestro número de grupo (01 para el grupo 1, ... 12 para el grupo 12, etc). De forma que el grupo 1 tendrá el ASN 65001 y el grupo 12 tendrá el ASN 65012.
+>
+
+Configuramos 2 sesiones BGP, una IPv4 y otra IPv6.
+
+En este punto, aplicaremos políticas (***route-map***) en ambas sesiones de forma de ***permitir todos*** los prefijos recibidos del router de borde y publicar al mismo todos los que tengamos en nuestra tabla BGP (para ello utilizamos algunos de los route-map creados anteriormente): ***route-map TODO-IPv4*** y ***route-map TODO-IPv6***.
+
+```
+router bgp 650XX
+ bgp router-id 100.64.1.X
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 100.64.0.10 remote-as 65000
+ neighbor 100.64.0.10 description iborder-rtr
+ neighbor fd4a:7fe0::10 remote-as 65000
+ neighbor fd4a:7fe0::10 description iborder-rtr
+ !
+ address-family ipv4 unicast
+  neighbor 100.64.0.10 activate
+  neighbor 100.64.0.10 soft-reconfiguration inbound
+  neighbor 100.64.0.10 route-map TODO-IPv4 in
+  neighbor 100.64.0.10 route-map TODO-IPv4 out
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  neighbor fd4a:7fe0::10 activate
+  neighbor fd4a:7fe0::10 soft-reconfiguration inbound
+  neighbor fd4a:7fe0::10 route-map TODO-IPv6 in
+  neighbor fd4a:7fe0::10 route-map TODO-IPv6 out
+ exit-address-family
+```
+
+
+
+#### Agregamos la configuración para conectar el router con nuestro validador RPKI
+
+Para conectar el router al validador RPKI podemos utilizar la dirección IPv4 del validador o el nombre de dominio del mismo... en este caso utilizaremos las direcciones IPv4:
+
+**rpki1**:  *100.64.0.70*
+**rpki2**:  *100.64.0.70*
+
+Y el puerto TCP que configuramos en los servidores, en nuestro caso ambos en el puerto 323.
+
+Finalmente también debemos indicar la preferencia de cada servidor de forma que nuestro router intentará primero con el que tenga menor preferencia.
+
+```
+rpki
+ rpki polling_period 300
+ rpki cache 100.64.0.70 323 preference 1
+ rpki cache 100.64.0.71 323 preference 2
+```
+
+
+
+En este punto, ya tenemos completamente configurado nuestro router de borde y podemos comenzar a visualizar algunos detalles y ensayar diferentes escenarios.
+
+
+
+## Visualización de la configuración del validador RPKI
 
 
 
