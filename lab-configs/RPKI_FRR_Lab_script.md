@@ -609,11 +609,11 @@ router bgp 650XX
 
 
 
-Visualizamos el estado de las sesiones BGP (IPv6)
+#### Visualizamos el estado de las sesiones BGP (IPv6)
 
 ```
-grp2-rtr# sh bgp ipv6 unicast summary 
-BGP router identifier 100.64.1.2, local AS number 65002 vrf-id 0
+grpX-rtr# sh bgp ipv6 unicast summary 
+BGP router identifier 100.64.1.X, local AS number 650XX vrf-id 0
 BGP table version 557
 RIB entries 88, using 16 KiB of memory
 Peers 1, using 723 KiB of memory
@@ -626,10 +626,31 @@ Total number of neighbors 1
 
 
 
-Visualizamos el estado de la tabla BGP (IPv6)
+#### Visualizamos el estado de la tabla BGP (IPv6)
 
 ```
+grpX-rtr# sh bgp ipv6 unicast
+BGP table version is 15706, local router ID is 100.64.1.X, vrf id 0
+Default local pref 100, local AS 65001
+Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
+               i internal, r RIB-failure, S Stale, R Removed
+Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
+Origin codes:  i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
+   Network          Next Hop            Metric LocPrf Weight Path
+*> 2001:7fb:fd02::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 8455 12654 i
+*> 2001:7fb:fe00::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 30781 204092 12654 i
+*> 2001:7fb:fe01::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 9002 12654 i
+*> 2001:7fb:fe03::/48
+                    fe80::216:3eff:fee0:2b4b
+                                                           0 65000 64512 264759 7049 3549 3356 8455 12654 i
 ```
 
 
@@ -661,7 +682,7 @@ En este punto, ya tenemos completamente configurado nuestro router de borde y po
 #### Visualización de la configuración del validador RPKI
 
 ```
-grp2-rtr# sh rpki cache-connection 
+grpX-rtr# sh rpki cache-connection 
 Connected to group 1
 rpki tcp cache 100.64.0.70 323 pref 1
 ```
@@ -671,7 +692,7 @@ rpki tcp cache 100.64.0.70 323 pref 1
 #### Visualización del estado de validación de un prefijo en particular
 
 ```
-grp2-rtr# sh rpki prefix 2001:13c7:7002::/48
+grpX-rtr# sh rpki prefix 2001:13c7:7002::/48
 Prefix                                   Prefix Length  Origin-AS
 2001:13c7:7002::                            48 -  48        28001
 ```
@@ -681,9 +702,9 @@ Prefix                                   Prefix Length  Origin-AS
 #### Visualizamos el estado de la tabla BGP (IPv6)
 
 ```
-grp1-rtr# sh bgp ipv6 unicast
-BGP table version is 8453, local router ID is 100.64.1.1, vrf id 0
-Default local pref 100, local AS 65001
+grpX-rtr# sh bgp ipv6 unicast
+BGP table version is 8453, local router ID is 100.64.1.X, vrf id 0
+Default local pref 100, local AS 650XX
 Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
                i internal, r RIB-failure, S Stale, R Removed
 Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
@@ -714,10 +735,10 @@ V*> 2001:7fb:fe04::/48
 
 ## Analysis de un prefijo particular a modo de demostración
 
-Visualizamos el prefijo 2001:7fb:fd02::1 en la tabla BGP
+Visualizamos el prefijo ***2001:7fb:fd02::1*** en la tabla BGP
 
 ```
-grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/48, version 2960
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
@@ -734,14 +755,12 @@ Paths: (1 available, best #1, table default)
 
 
 
-
-
-Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (2001:7fb:fd02::1) y lo dejamos ejecutando
+Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2001:7fb:fd02::1***) y lo dejamos ejecutando
 
 ```
 root@cli:~# mtr 2001:7fb:fd02::1
 
-cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:06:48+0000
+cli.grpX.lac.te-labs.training (fd4a:7fe0:X::2)                 2021-10-04T22:06:48+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
@@ -776,7 +795,7 @@ Ahora aguardamos a que los instructores realicen unas modificaciones... observan
 - Intente refrescar el mtr (*presionando la letra "r"*)
 
 ```
-cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:25:36+0000
+cli.grpX.lac.te-labs.training (fd4a:7fe0:X::2)                 2021-10-04T22:25:36+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
@@ -790,7 +809,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 Visualizamos el prefijo en nuestra tabla BGP
 
 ```
-grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/64, version 8495
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
@@ -816,10 +835,10 @@ Paths: (1 available, best #1, table default)
 Aplicamos el filtro "RPKI" que solo instalará en la tabla BGP los prefijos con estado "valid" o "not found" (descartando los "invalid")
 
 ```
-grp1-rtr# conf t
-grp1-rtr(config)# router bgp 65001
-grp1-rtr(config-router)# address-family ipv6 unicast
-grp1-rtr(config-router-af)# neighbor fd4a:7fe0::10 route-map RPKI in
+grpX-rtr# conf t
+grpX-rtr(config)# router bgp 650XX
+grpX-rtr(config-router)# address-family ipv6 unicast
+grpX-rtr(config-router-af)# neighbor fd4a:7fe0::10 route-map RPKI in
 ```
 
 
@@ -827,7 +846,7 @@ grp1-rtr(config-router-af)# neighbor fd4a:7fe0::10 route-map RPKI in
 Visualizamos el prefijo en nuestra tabla BGP
 
 ```
-grp1-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
+grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/48, version 8503
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
@@ -850,7 +869,7 @@ Paths: (1 available, best #1, table default)
 En el cliente visualizamos nuevamente el MTR, intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T22:50:51+0000
+cli.grpX.lac.te-labs.training (fd4a:7fe0:X::2)                 2021-10-04T22:50:51+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
@@ -875,7 +894,7 @@ Los tutores aplican el filtro RPKI en el router de borde.
 Accedemos al cliente y visualizamos lo que sucede. Intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grp1.lac.te-labs.training (fd4a:7fe0:1::2)                 2021-10-04T23:09:10+0000
+cli.grpX.lac.te-labs.training (fd4a:7fe0:X::2)                 2021-10-04T23:09:10+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
