@@ -9,7 +9,7 @@
 ***Guillermo Cicileo,***
 ***Erika Vega***
 
-> (2021-08-11)
+> (2022-04-26)
 
 ------
 
@@ -275,8 +275,8 @@ router bgp 65000
  neighbor 100.64.1.3 remote-as 65003
  neighbor 100.64.1.3 description grp3-rtr
  ...
- neighbor 198.18.0.1 remote-as 64512
- neighbor 198.18.0.1 description ISP (Ariel Weher)
+ neighbor 172.30.0.1 remote-as 64135
+ neighbor 172.30.0.1 description iborder-rtr-LACNOG
  neighbor fd98:21e2:0:1::1 remote-as 65001
  neighbor fd98:21e2:0:1::1 description grp1-rtr
  neighbor fd98:21e2:0:1::2 remote-as 65002
@@ -299,17 +299,17 @@ router bgp 65000
   neighbor 100.64.1.3 route-map TODO-IPv4 in
   neighbor 100.64.1.3 route-map TODO-IPv4 out
   ...
-  neighbor 198.18.0.1 activate
-  neighbor 198.18.0.1 soft-reconfiguration inbound
-  neighbor 198.18.0.1 route-map PERMIT-SOME-ASN in
-  neighbor 198.18.0.1 route-map NADA-IPv4 out
+  neighbor 172.30.0.1 activate
+  neighbor 172.30.0.1 soft-reconfiguration inbound
+  neighbor 172.30.0.1 route-map PERMIT-SOME-ASN in
+  neighbor 172.30.0.1 route-map NADA-IPv4 out
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor 198.18.0.1 activate
-  neighbor 198.18.0.1 soft-reconfiguration inbound
-  neighbor 198.18.0.1 route-map PERMIT-SOME-ASN in
-  neighbor 198.18.0.1 route-map NADA-IPv6 out
+  neighbor 172.30.0.1 activate
+  neighbor 172.30.0.1 soft-reconfiguration inbound
+  neighbor 172.30.0.1 route-map PERMIT-SOME-ASN in
+  neighbor 172.30.0.1 route-map NADA-IPv4 out
   neighbor fd98:21e2:0:1::1 activate
   neighbor fd98:21e2:0:1::1 soft-reconfiguration inbound
   neighbor fd98:21e2:0:1::1 route-map TODO-IPv6 in
@@ -335,6 +335,8 @@ bgp as-path access-list AS-PATH-PERMIT-LIST seq 10 permit _28000_
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 20 permit _28001_
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 30 permit _12654_
 bgp as-path access-list AS-PATH-PERMIT-LIST seq 40 permit _196615_
+bgp as-path access-list AS-PATH-PERMIT-LIST seq 50 permit _64135_
+bgp as-path access-list AS-PATH-PERMIT-LIST seq 60 permit _64136_
 !
 route-map NADA-IPv4 permit 10
  match ip address prefix-list DENY-ALL-IPv4
@@ -692,9 +694,9 @@ rpki tcp cache 100.64.0.70 323 pref 1
 #### Visualización del estado de validación de un prefijo en particular
 
 ```
-grpX-rtr# sh rpki prefix 2001:13c7:7002::/48
+grpX-rtr# sh rpki prefix 2803:9910:8000::/48
 Prefix                                   Prefix Length  Origin-AS
-2001:13c7:7002::                            48 -  48        28001
+2803:9910:8000::                            34 -  48        64135
 ```
 
 
@@ -735,19 +737,19 @@ V*> 2001:7fb:fe04::/48
 
 ## Analysis de un prefijo particular a modo de demostración
 
-Visualizamos el prefijo ***2001:7fb:fd02::1*** en la tabla BGP
+Visualizamos el prefijo ***2803:9910:8000::1*** en la tabla BGP
 
 ```
-grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
-BGP routing table entry for 2001:7fb:fd02::/48, version 2960
+grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
+BGP routing table entry for 2803:9910:8000::/34, version 32
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
   fd98:21e2::10
-  65000 64512 264759 7049 3549 3356 8455 12654
+  65000 64135
     fd98:21e2::10 from fd98:21e2::10 (100.64.0.10)
-    (fe80::216:3eff:fee0:2b4b) (used)
+    (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, valid, external, best (First path received), rpki validation-state: valid
-      Last update: Mon Oct  4 21:34:09 2021
+      Last update: Tue Apr 26 23:21:23 2022
 ```
 
 * ***¿Qué sucede con el estado de validación?***
@@ -758,7 +760,7 @@ Paths: (1 available, best #1, table default)
 Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2001:7fb:fd02::1***) y lo dejamos ejecutando
 
 ```
-root@cli:~# mtr 2001:7fb:fd02::1
+root@cli:~# mtr 2803:9910:8000::1
 
 cli.grpX.lac.te-labs.training (fd98:21e2:X::2)                 2021-10-04T22:06:48+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
@@ -781,7 +783,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 15. ae27.mpr1.cdg11.fr.zip.zayo.com           0.0%     9   84.4  79.2  78.3  84.4   2.0
 16. ae10.tcr2.th2.par.core.as8218.eu          0.0%     9   78.2  81.3  78.2 103.9   8.5
 17. 2001:1b48:2:3::24:1                       0.0%     9   78.4  78.8  78.4  80.4   0.8
-18. 2001:7fb:fd02::1                          0.0%     9   90.8  90.8  90.7  90.8   0.0
+18. ...							                          0.0%     9   90.8  90.8  90.7  90.8   0.0
    
 ```
 
@@ -809,16 +811,16 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 Visualizamos el prefijo en nuestra tabla BGP
 
 ```
-grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
-BGP routing table entry for 2001:7fb:fd02::/64, version 8495
+grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
+BGP routing table entry for 2803:9910:8000::/48, version 155
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd98:21e2::10
-  65000 65002
-    fd98:21e2:0:1::2 from fd98:21e2::10 (100.64.0.10)
-    (fe80::216:3eff:fee0:2b4b) (used)
-      Origin IGP, valid, external, best (First path received), rpki validation-state: invalid
-      Last update: Mon Oct  4 22:22:12 2021
+  fd98:21e2:0:1::1 fd98:21e2:0:1::2 fd98:21e2:0:1::3 fd98:21e2:0:1::4 fd98:21e2:0:1::5
+  65002
+    fd98:21e2:0:1::2 from fd98:21e2:0:1::2 (100.64.1.2)
+    (fe80::216:3eff:fe8b:4d79) (used)
+      Origin IGP, metric 0, valid, external, best (First path received), rpki validation-state: invalid
+      Last update: Tue Apr 26 23:24:44 2022
 ```
 
 
@@ -874,8 +876,8 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
  1. fd98:21e2:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
- 2. fd98:21e2::10                             0.0%     8    0.2   0.1   0.1   0.2   0.0
- 3. 2001:7fb:fd02::1                          0.0%     7    0.2   0.2   0.1   0.2   0.0
+ 2. fd98:21e2::10                      				0.0%     8    0.2   0.1   0.1   0.2   0.0
+ 3. 2803:9910:8000::1													0.0%     7    0.2   0.2   0.1   0.2   0.0
 
 ```
 
@@ -915,7 +917,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 15. ae27.mpr1.cdg11.fr.zip.zayo.com           0.0%    20   78.4  80.5  78.3 102.6   5.3
 16. ae10.tcr2.th2.par.core.as8218.eu          0.0%    20   78.3  78.4  78.3  78.8   0.1
 17. 2001:1b48:2:3::24:1                       0.0%    19   78.4  78.5  78.3  79.2   0.2
-18. 2001:7fb:fd02::1                          0.0%    19   91.1  90.9  90.9  91.2   0.1
+18. ...							                          0.0%    19   91.1  90.9  90.9  91.2   0.1
 
 ```
 
