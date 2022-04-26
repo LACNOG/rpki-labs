@@ -27,19 +27,19 @@
      EQUIPO          DIRECCION IPv4            DIRECCION IPv6
 
 +--------------+-----------------------+-----------------------------+
-| grpX-cli     | 100.100.X.2 (eth0)    | fd77:662:X::2 (eth0)        |
+| grpX-cli     | 100.100.X.2 (eth0)    | fd98:21e2:X::2 (eth0)        |
 +--------------+-----------------------+-----------------------------+
-| grpX-rtr     | 100.64.1.X (eth0)     | fd77:662:X::1 (eth1)        |
-|              | 100.100.X.65 (eth2)   | fd77:662:X:64::1 (eth2)     |
-|              | 100.100.X.193 (eth4)  | fd77:662:X:192::1 (eth4)    |
-|              | 100.100.X.129 (eth3)  | fd77:662:X:128::1 (eth3)    |
-|              | 100.100.X.1 (eth1)    | fd77:662:0:1::X (eth0)      |
+| grpX-rtr     | 100.64.1.X (eth0)     | fd98:21e2:X::1 (eth1)        |
+|              | 100.100.X.65 (eth2)   | fd98:21e2:X:64::1 (eth2)     |
+|              | 100.100.X.193 (eth4)  | fd98:21e2:X:192::1 (eth4)    |
+|              | 100.100.X.129 (eth3)  | fd98:21e2:X:128::1 (eth3)    |
+|              | 100.100.X.1 (eth1)    | fd98:21e2:0:1::X (eth0)      |
 +--------------+-----------------------+-----------------------------+
-| iborder-rtr  | 198.18.0.2 (wg0)      | fd77:662::10 (eth0)         |
+| iborder-rtr  | 198.18.0.2 (wg0)      | fd98:21e2::10 (eth0)         |
 +--------------+-----------------------+-----------------------------+
-| rpki1        | 100.64.0.70 (eth0)    | fd77:662::70 (eth0)         |
+| rpki1        | 100.64.0.70 (eth0)    | fd98:21e2::70 (eth0)         |
 +--------------------------------------+-----------------------------+
-| rpki2        | 100.64.0.71 (eth0)    | fd77:662::71 (eth0)         |
+| rpki2        | 100.64.0.71 (eth0)    | fd98:21e2::71 (eth0)         |
 +--------------+-----------------------+-----------------------------+
 ```
 
@@ -253,12 +253,12 @@ service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
 ip route 181.199.160.1/32 Null0
-ipv6 route ::/0 fd77:662::1
+ipv6 route ::/0 fd98:21e2::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.0.10/22
- ipv6 address fd77:662::10/48
+ ipv6 address fd98:21e2::10/48
 !
 interface wg0
  description "tunel contra el ISP (Ariel Weher)"
@@ -277,12 +277,12 @@ router bgp 65000
  ...
  neighbor 198.18.0.1 remote-as 64512
  neighbor 198.18.0.1 description ISP (Ariel Weher)
- neighbor fd77:662:0:1::1 remote-as 65001
- neighbor fd77:662:0:1::1 description grp1-rtr
- neighbor fd77:662:0:1::2 remote-as 65002
- neighbor fd77:662:0:1::2 description grp2-rtr
- neighbor fd77:662:0:1::3 remote-as 65003
- neighbor fd77:662:0:1::3 description grp3-rtr
+ neighbor fd98:21e2:0:1::1 remote-as 65001
+ neighbor fd98:21e2:0:1::1 description grp1-rtr
+ neighbor fd98:21e2:0:1::2 remote-as 65002
+ neighbor fd98:21e2:0:1::2 description grp2-rtr
+ neighbor fd98:21e2:0:1::3 remote-as 65003
+ neighbor fd98:21e2:0:1::3 description grp3-rtr
  ...
  !
  address-family ipv4 unicast
@@ -310,18 +310,18 @@ router bgp 65000
   neighbor 198.18.0.1 soft-reconfiguration inbound
   neighbor 198.18.0.1 route-map PERMIT-SOME-ASN in
   neighbor 198.18.0.1 route-map NADA-IPv6 out
-  neighbor fd77:662:0:1::1 activate
-  neighbor fd77:662:0:1::1 soft-reconfiguration inbound
-  neighbor fd77:662:0:1::1 route-map TODO-IPv6 in
-  neighbor fd77:662:0:1::1 route-map TODO-IPv6 out
-  neighbor fd77:662:0:1::2 activate
-  neighbor fd77:662:0:1::2 soft-reconfiguration inbound
-  neighbor fd77:662:0:1::2 route-map TODO-IPv6 in
-  neighbor fd77:662:0:1::2 route-map TODO-IPv6 out
-  neighbor fd77:662:0:1::3 activate
-  neighbor fd77:662:0:1::3 soft-reconfiguration inbound
-  neighbor fd77:662:0:1::3 route-map TODO-IPv6 in
-  neighbor fd77:662:0:1::3 route-map TODO-IPv6 out
+  neighbor fd98:21e2:0:1::1 activate
+  neighbor fd98:21e2:0:1::1 soft-reconfiguration inbound
+  neighbor fd98:21e2:0:1::1 route-map TODO-IPv6 in
+  neighbor fd98:21e2:0:1::1 route-map TODO-IPv6 out
+  neighbor fd98:21e2:0:1::2 activate
+  neighbor fd98:21e2:0:1::2 soft-reconfiguration inbound
+  neighbor fd98:21e2:0:1::2 route-map TODO-IPv6 in
+  neighbor fd98:21e2:0:1::2 route-map TODO-IPv6 out
+  neighbor fd98:21e2:0:1::3 activate
+  neighbor fd98:21e2:0:1::3 soft-reconfiguration inbound
+  neighbor fd98:21e2:0:1::3 route-map TODO-IPv6 in
+  neighbor fd98:21e2:0:1::3 route-map TODO-IPv6 out
   ...
  exit-address-family
 !
@@ -394,32 +394,32 @@ hostname grpX-rtr
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd77:662::1
+ipv6 route ::/0 fd98:21e2::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd77:662:0:1::X/48
+ ipv6 address fd98:21e2:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd77:662:X::1/64
+ ipv6 address fd98:21e2:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd77:662:X:64::1/64
+ ipv6 address fd98:21e2:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd77:662:X:128::1/64
+ ipv6 address fd98:21e2:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd77:662:X:192::1/64
+ ipv6 address fd98:21e2:X:192::1/64
 !
 line vty
 !
@@ -449,32 +449,32 @@ rpki
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd77:662::1
+ipv6 route ::/0 fd98:21e2::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd77:662:0:1::X/48
+ ipv6 address fd98:21e2:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd77:662:X::1/64
+ ipv6 address fd98:21e2:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd77:662:X:64::1/64
+ ipv6 address fd98:21e2:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd77:662:X:128::1/64
+ ipv6 address fd98:21e2:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd77:662:X:192::1/64
+ ipv6 address fd98:21e2:X:192::1/64
 !
 router bgp 6500X
  bgp router-id 100.64.1.X
@@ -482,8 +482,8 @@ router bgp 6500X
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd77:662::10 remote-as 65000
- neighbor fd77:662::10 description iborder-rtr
+ neighbor fd98:21e2::10 remote-as 65000
+ neighbor fd98:21e2::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -493,10 +493,10 @@ router bgp 6500X
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd77:662::10 activate
-  neighbor fd77:662::10 soft-reconfiguration inbound
-  neighbor fd77:662::10 route-map TODO-IPv6 in
-  neighbor fd77:662::10 route-map TODO-IPv6 out
+  neighbor fd98:21e2::10 activate
+  neighbor fd98:21e2::10 soft-reconfiguration inbound
+  neighbor fd98:21e2::10 route-map TODO-IPv6 in
+  neighbor fd98:21e2::10 route-map TODO-IPv6 out
  exit-address-family
 !
 ip prefix-list DENY-ALL-IPv4 seq 5 deny any
@@ -589,8 +589,8 @@ router bgp 650XX
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd77:662::10 remote-as 65000
- neighbor fd77:662::10 description iborder-rtr
+ neighbor fd98:21e2::10 remote-as 65000
+ neighbor fd98:21e2::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -600,10 +600,10 @@ router bgp 650XX
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd77:662::10 activate
-  neighbor fd77:662::10 soft-reconfiguration inbound
-  neighbor fd77:662::10 route-map TODO-IPv6 in
-  neighbor fd77:662::10 route-map TODO-IPv6 out
+  neighbor fd98:21e2::10 activate
+  neighbor fd98:21e2::10 soft-reconfiguration inbound
+  neighbor fd98:21e2::10 route-map TODO-IPv6 in
+  neighbor fd98:21e2::10 route-map TODO-IPv6 out
  exit-address-family
 ```
 
@@ -619,7 +619,7 @@ RIB entries 88, using 16 KiB of memory
 Peers 1, using 723 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-fd77:662::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
+fd98:21e2::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
 
 Total number of neighbors 1
 ```
@@ -742,9 +742,9 @@ grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/48, version 2960
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd77:662::10
+  fd98:21e2::10
   65000 64512 264759 7049 3549 3356 8455 12654
-    fd77:662::10 from fd77:662::10 (100.64.0.10)
+    fd98:21e2::10 from fd98:21e2::10 (100.64.0.10)
     (fe80::216:3eff:fee0:2b4b) (used)
       Origin IGP, valid, external, best (First path received), rpki validation-state: valid
       Last update: Mon Oct  4 21:34:09 2021
@@ -760,13 +760,13 @@ Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2001:
 ```
 root@cli:~# mtr 2001:7fb:fd02::1
 
-cli.grpX.lac.te-labs.training (fd77:662:X::2)                 2021-10-04T22:06:48+0000
+cli.grpX.lac.te-labs.training (fd98:21e2:X::2)                 2021-10-04T22:06:48+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd77:662:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
- 2. fd77:662::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
- 3. fd77:662::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 1. fd98:21e2:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 2. fd98:21e2::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
+ 3. fd98:21e2::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
@@ -795,12 +795,12 @@ Ahora aguardamos a que los instructores realicen unas modificaciones... observan
 - Intente refrescar el mtr (*presionando la letra "r"*)
 
 ```
-cli.grpX.lac.te-labs.training (fd77:662:X::2)                 2021-10-04T22:25:36+0000
+cli.grpX.lac.te-labs.training (fd98:21e2:X::2)                 2021-10-04T22:25:36+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd77:662:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
- 2. fd77:662::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
+ 1. fd98:21e2:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
+ 2. fd98:21e2::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
  3. 2001:7fb:fd02::1                          0.0%   130    0.2   0.1   0.1   0.4   0.1
 ```
 
@@ -813,9 +813,9 @@ grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/64, version 8495
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd77:662::10
+  fd98:21e2::10
   65000 65002
-    fd77:662:0:1::2 from fd77:662::10 (100.64.0.10)
+    fd98:21e2:0:1::2 from fd98:21e2::10 (100.64.0.10)
     (fe80::216:3eff:fee0:2b4b) (used)
       Origin IGP, valid, external, best (First path received), rpki validation-state: invalid
       Last update: Mon Oct  4 22:22:12 2021
@@ -838,7 +838,7 @@ Aplicamos el filtro "RPKI" que solo instalará en la tabla BGP los prefijos con 
 grpX-rtr# conf t
 grpX-rtr(config)# router bgp 650XX
 grpX-rtr(config-router)# address-family ipv6 unicast
-grpX-rtr(config-router-af)# neighbor fd77:662::10 route-map RPKI in
+grpX-rtr(config-router-af)# neighbor fd98:21e2::10 route-map RPKI in
 ```
 
 
@@ -850,9 +850,9 @@ grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
 BGP routing table entry for 2001:7fb:fd02::/48, version 8503
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd77:662::10
+  fd98:21e2::10
   65000 64512 264759 7049 3549 3356 8455 12654
-    fd77:662::10 from fd77:662::10 (100.64.0.10)
+    fd98:21e2::10 from fd98:21e2::10 (100.64.0.10)
     (fe80::216:3eff:fee0:2b4b) (used)
       Origin IGP, localpref 200, valid, external, best (First path received), rpki validation-state: valid
       Last update: Mon Oct  4 22:48:00 2021
@@ -869,12 +869,12 @@ Paths: (1 available, best #1, table default)
 En el cliente visualizamos nuevamente el MTR, intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd77:662:X::2)                 2021-10-04T22:50:51+0000
+cli.grpX.lac.te-labs.training (fd98:21e2:X::2)                 2021-10-04T22:50:51+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd77:662:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
- 2. fd77:662::10                             0.0%     8    0.2   0.1   0.1   0.2   0.0
+ 1. fd98:21e2:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
+ 2. fd98:21e2::10                             0.0%     8    0.2   0.1   0.1   0.2   0.0
  3. 2001:7fb:fd02::1                          0.0%     7    0.2   0.2   0.1   0.2   0.0
 
 ```
@@ -894,13 +894,13 @@ Los tutores aplican el filtro RPKI en el router de borde.
 Accedemos al cliente y visualizamos lo que sucede. Intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd77:662:X::2)                 2021-10-04T23:09:10+0000
+cli.grpX.lac.te-labs.training (fd98:21e2:X::2)                 2021-10-04T23:09:10+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd77:662:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
- 2. fd77:662::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
- 3. fd77:662::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
+ 1. fd98:21e2:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 2. fd98:21e2::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 3. fd98:21e2::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
