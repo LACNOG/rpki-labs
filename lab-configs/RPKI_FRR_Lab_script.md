@@ -848,16 +848,16 @@ grpX-rtr(config-router-af)# neighbor fd98:21e2::10 route-map RPKI in
 Visualizamos el prefijo en nuestra tabla BGP
 
 ```
-grpX-rtr# sh bgp ipv6 unicast 2001:7fb:fd02::1
-BGP routing table entry for 2001:7fb:fd02::/48, version 8503
+grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
+BGP routing table entry for 2803:9910:8000::/34, version 125
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
   fd98:21e2::10
-  65000 64512 264759 7049 3549 3356 8455 12654
+  65000 64135
     fd98:21e2::10 from fd98:21e2::10 (100.64.0.10)
-    (fe80::216:3eff:fee0:2b4b) (used)
+    (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, localpref 200, valid, external, best (First path received), rpki validation-state: valid
-      Last update: Mon Oct  4 22:48:00 2021
+      Last update: Wed Apr 27 00:03:42 2022
 ```
 
 
