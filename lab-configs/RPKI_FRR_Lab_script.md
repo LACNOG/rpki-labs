@@ -757,7 +757,7 @@ Paths: (1 available, best #1, table default)
 
 
 
-Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2001:7fb:fd02::1***) y lo dejamos ejecutando
+Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2803:9910:8000::1***) y lo dejamos ejecutando
 
 ```
 root@cli:~# mtr 2803:9910:8000::1
