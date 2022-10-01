@@ -9,7 +9,7 @@
 ***Guillermo Cicileo,***
 ***Erika Vega***
 
-> (2022-04-26)
+> (2022-10-03)
 
 ------
 
@@ -27,19 +27,19 @@
      EQUIPO          DIRECCION IPv4            DIRECCION IPv6
 
 +--------------+-----------------------+-----------------------------+
-| grpX-cli     | 100.100.X.2 (eth0)    | fd2e:9c0d:X::2 (eth0)        |
+| grpX-cli     | 100.100.X.2 (eth0)    | fddf:b98d:X::2 (eth0)        |
 +--------------+-----------------------+-----------------------------+
-| grpX-rtr     | 100.64.1.X (eth0)     | fd2e:9c0d:X::1 (eth1)        |
-|              | 100.100.X.65 (eth2)   | fd2e:9c0d:X:64::1 (eth2)     |
-|              | 100.100.X.193 (eth4)  | fd2e:9c0d:X:192::1 (eth4)    |
-|              | 100.100.X.129 (eth3)  | fd2e:9c0d:X:128::1 (eth3)    |
-|              | 100.100.X.1 (eth1)    | fd2e:9c0d:0:1::X (eth0)      |
+| grpX-rtr     | 100.64.1.X (eth0)     | fddf:b98d:X::1 (eth1)        |
+|              | 100.100.X.65 (eth2)   | fddf:b98d:X:64::1 (eth2)     |
+|              | 100.100.X.193 (eth4)  | fddf:b98d:X:192::1 (eth4)    |
+|              | 100.100.X.129 (eth3)  | fddf:b98d:X:128::1 (eth3)    |
+|              | 100.100.X.1 (eth1)    | fddf:b98d:0:1::X (eth0)      |
 +--------------+-----------------------+-----------------------------+
-| iborder-rtr  | 198.18.0.2 (wg0)      | fd2e:9c0d::10 (eth0)         |
+| iborder-rtr  | 198.18.0.2 (wg0)      | fddf:b98d::10 (eth0)         |
 +--------------+-----------------------+-----------------------------+
-| rpki1        | 100.64.0.70 (eth0)    | fd2e:9c0d::70 (eth0)         |
+| rpki1        | 100.64.0.70 (eth0)    | fddf:b98d::70 (eth0)         |
 +--------------------------------------+-----------------------------+
-| rpki2        | 100.64.0.71 (eth0)    | fd2e:9c0d::71 (eth0)         |
+| rpki2        | 100.64.0.71 (eth0)    | fddf:b98d::71 (eth0)         |
 +--------------+-----------------------+-----------------------------+
 ```
 
@@ -252,17 +252,17 @@ hostname iborder-rtr
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ip route 181.199.160.1/32 Null0
-ipv6 route ::/0 fd2e:9c0d::1
+ip route 198.18.0.2/32 172.30.0.1
+ipv6 route ::/0 fddf:b98d::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.0.10/22
- ipv6 address fd2e:9c0d::10/48
+ ipv6 address fddf:b98d::10/48
 !
 interface wg0
- description "tunel contra el ISP (Ariel Weher)"
- ip address 198.18.0.2/29
+ description "ISP LACNOG"
+ ip address 172.30.0.2/29
 !
 router bgp 65000
  bgp router-id 100.64.0.10
@@ -277,12 +277,12 @@ router bgp 65000
  ...
  neighbor 172.30.0.1 remote-as 64135
  neighbor 172.30.0.1 description iborder-rtr-LACNOG
- neighbor fd2e:9c0d:0:1::1 remote-as 65001
- neighbor fd2e:9c0d:0:1::1 description grp1-rtr
- neighbor fd2e:9c0d:0:1::2 remote-as 65002
- neighbor fd2e:9c0d:0:1::2 description grp2-rtr
- neighbor fd2e:9c0d:0:1::3 remote-as 65003
- neighbor fd2e:9c0d:0:1::3 description grp3-rtr
+ neighbor fddf:b98d:0:1::1 remote-as 65001
+ neighbor fddf:b98d:0:1::1 description grp1-rtr
+ neighbor fddf:b98d:0:1::2 remote-as 65002
+ neighbor fddf:b98d:0:1::2 description grp2-rtr
+ neighbor fddf:b98d:0:1::3 remote-as 65003
+ neighbor fddf:b98d:0:1::3 description grp3-rtr
  ...
  !
  address-family ipv4 unicast
@@ -310,18 +310,18 @@ router bgp 65000
   neighbor 172.30.0.1 soft-reconfiguration inbound
   neighbor 172.30.0.1 route-map PERMIT-SOME-ASN in
   neighbor 172.30.0.1 route-map NADA-IPv4 out
-  neighbor fd2e:9c0d:0:1::1 activate
-  neighbor fd2e:9c0d:0:1::1 soft-reconfiguration inbound
-  neighbor fd2e:9c0d:0:1::1 route-map TODO-IPv6 in
-  neighbor fd2e:9c0d:0:1::1 route-map TODO-IPv6 out
-  neighbor fd2e:9c0d:0:1::2 activate
-  neighbor fd2e:9c0d:0:1::2 soft-reconfiguration inbound
-  neighbor fd2e:9c0d:0:1::2 route-map TODO-IPv6 in
-  neighbor fd2e:9c0d:0:1::2 route-map TODO-IPv6 out
-  neighbor fd2e:9c0d:0:1::3 activate
-  neighbor fd2e:9c0d:0:1::3 soft-reconfiguration inbound
-  neighbor fd2e:9c0d:0:1::3 route-map TODO-IPv6 in
-  neighbor fd2e:9c0d:0:1::3 route-map TODO-IPv6 out
+  neighbor fddf:b98d:0:1::1 activate
+  neighbor fddf:b98d:0:1::1 soft-reconfiguration inbound
+  neighbor fddf:b98d:0:1::1 route-map TODO-IPv6 in
+  neighbor fddf:b98d:0:1::1 route-map TODO-IPv6 out
+  neighbor fddf:b98d:0:1::2 activate
+  neighbor fddf:b98d:0:1::2 soft-reconfiguration inbound
+  neighbor fddf:b98d:0:1::2 route-map TODO-IPv6 in
+  neighbor fddf:b98d:0:1::2 route-map TODO-IPv6 out
+  neighbor fddf:b98d:0:1::3 activate
+  neighbor fddf:b98d:0:1::3 soft-reconfiguration inbound
+  neighbor fddf:b98d:0:1::3 route-map TODO-IPv6 in
+  neighbor fddf:b98d:0:1::3 route-map TODO-IPv6 out
   ...
  exit-address-family
 !
@@ -396,32 +396,32 @@ hostname grpX-rtr
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd2e:9c0d::1
+ipv6 route ::/0 fddf:b98d::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd2e:9c0d:0:1::X/48
+ ipv6 address fddf:b98d:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd2e:9c0d:X::1/64
+ ipv6 address fddf:b98d:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd2e:9c0d:X:64::1/64
+ ipv6 address fddf:b98d:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd2e:9c0d:X:128::1/64
+ ipv6 address fddf:b98d:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd2e:9c0d:X:192::1/64
+ ipv6 address fddf:b98d:X:192::1/64
 !
 line vty
 !
@@ -451,32 +451,32 @@ rpki
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd2e:9c0d::1
+ipv6 route ::/0 fddf:b98d::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd2e:9c0d:0:1::X/48
+ ipv6 address fddf:b98d:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd2e:9c0d:X::1/64
+ ipv6 address fddf:b98d:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd2e:9c0d:X:64::1/64
+ ipv6 address fddf:b98d:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd2e:9c0d:X:128::1/64
+ ipv6 address fddf:b98d:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd2e:9c0d:X:192::1/64
+ ipv6 address fddf:b98d:X:192::1/64
 !
 router bgp 6500X
  bgp router-id 100.64.1.X
@@ -484,8 +484,8 @@ router bgp 6500X
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd2e:9c0d::10 remote-as 65000
- neighbor fd2e:9c0d::10 description iborder-rtr
+ neighbor fddf:b98d::10 remote-as 65000
+ neighbor fddf:b98d::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -495,10 +495,10 @@ router bgp 6500X
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd2e:9c0d::10 activate
-  neighbor fd2e:9c0d::10 soft-reconfiguration inbound
-  neighbor fd2e:9c0d::10 route-map TODO-IPv6 in
-  neighbor fd2e:9c0d::10 route-map TODO-IPv6 out
+  neighbor fddf:b98d::10 activate
+  neighbor fddf:b98d::10 soft-reconfiguration inbound
+  neighbor fddf:b98d::10 route-map TODO-IPv6 in
+  neighbor fddf:b98d::10 route-map TODO-IPv6 out
  exit-address-family
 !
 ip prefix-list DENY-ALL-IPv4 seq 5 deny any
@@ -591,8 +591,8 @@ router bgp 650XX
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd2e:9c0d::10 remote-as 65000
- neighbor fd2e:9c0d::10 description iborder-rtr
+ neighbor fddf:b98d::10 remote-as 65000
+ neighbor fddf:b98d::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -602,10 +602,10 @@ router bgp 650XX
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd2e:9c0d::10 activate
-  neighbor fd2e:9c0d::10 soft-reconfiguration inbound
-  neighbor fd2e:9c0d::10 route-map TODO-IPv6 in
-  neighbor fd2e:9c0d::10 route-map TODO-IPv6 out
+  neighbor fddf:b98d::10 activate
+  neighbor fddf:b98d::10 soft-reconfiguration inbound
+  neighbor fddf:b98d::10 route-map TODO-IPv6 in
+  neighbor fddf:b98d::10 route-map TODO-IPv6 out
  exit-address-family
 ```
 
@@ -621,7 +621,7 @@ RIB entries 88, using 16 KiB of memory
 Peers 1, using 723 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-fd2e:9c0d::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
+fddf:b98d::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
 
 Total number of neighbors 1
 ```
@@ -744,9 +744,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/34, version 32
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd2e:9c0d::10
+  fddf:b98d::10
   65000 64135
-    fd2e:9c0d::10 from fd2e:9c0d::10 (100.64.0.10)
+    fddf:b98d::10 from fddf:b98d::10 (100.64.0.10)
     (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, valid, external, best (First path received), rpki validation-state: valid
       Last update: Tue Apr 26 23:21:23 2022
@@ -762,13 +762,13 @@ Accedemos al cliente y realizamos un mtr (traceroute) al mismo prefijo (***2803:
 ```
 root@cli:~# mtr 2803:9910:8000::1
 
-cli.grpX.lac.te-labs.training (fd2e:9c0d:X::2)                 2021-10-04T22:06:48+0000
+cli.grpX.lac.te-labs.training (fddf:b98d:X::2)                 2021-10-04T22:06:48+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd2e:9c0d:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
- 2. fd2e:9c0d::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
- 3. fd2e:9c0d::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 1. fddf:b98d:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 2. fddf:b98d::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
+ 3. fddf:b98d::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
@@ -797,12 +797,12 @@ Ahora aguardamos a que los instructores realicen unas modificaciones... observan
 - Intente refrescar el mtr (*presionando la letra "r"*)
 
 ```
-cli.grpX.lac.te-labs.training (fd2e:9c0d:X::2)                 2021-10-04T22:25:36+0000
+cli.grpX.lac.te-labs.training (fddf:b98d:X::2)                 2021-10-04T22:25:36+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd2e:9c0d:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
- 2. fd2e:9c0d::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
+ 1. fddf:b98d:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
+ 2. fddf:b98d::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
  3. 2001:7fb:fd02::1                          0.0%   130    0.2   0.1   0.1   0.4   0.1
 ```
 
@@ -815,9 +815,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/48, version 155
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd2e:9c0d:0:1::1 fd2e:9c0d:0:1::2 fd2e:9c0d:0:1::3 fd2e:9c0d:0:1::4 fd2e:9c0d:0:1::5
+  fddf:b98d:0:1::1 fddf:b98d:0:1::2 fddf:b98d:0:1::3 fddf:b98d:0:1::4 fddf:b98d:0:1::5
   65002
-    fd2e:9c0d:0:1::2 from fd2e:9c0d:0:1::2 (100.64.1.2)
+    fddf:b98d:0:1::2 from fddf:b98d:0:1::2 (100.64.1.2)
     (fe80::216:3eff:fe8b:4d79) (used)
       Origin IGP, metric 0, valid, external, best (First path received), rpki validation-state: invalid
       Last update: Tue Apr 26 23:24:44 2022
@@ -840,7 +840,7 @@ Aplicamos el filtro "RPKI" que solo instalará en la tabla BGP los prefijos con 
 grpX-rtr# conf t
 grpX-rtr(config)# router bgp 650XX
 grpX-rtr(config-router)# address-family ipv6 unicast
-grpX-rtr(config-router-af)# neighbor fd2e:9c0d::10 route-map RPKI in
+grpX-rtr(config-router-af)# neighbor fddf:b98d::10 route-map RPKI in
 ```
 
 
@@ -852,9 +852,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/34, version 125
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd2e:9c0d::10
+  fddf:b98d::10
   65000 64135
-    fd2e:9c0d::10 from fd2e:9c0d::10 (100.64.0.10)
+    fddf:b98d::10 from fddf:b98d::10 (100.64.0.10)
     (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, localpref 200, valid, external, best (First path received), rpki validation-state: valid
       Last update: Wed Apr 27 00:03:42 2022
@@ -871,12 +871,12 @@ Paths: (1 available, best #1, table default)
 En el cliente visualizamos nuevamente el MTR, intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd2e:9c0d:X::2)                 2021-10-04T22:50:51+0000
+cli.grpX.lac.te-labs.training (fddf:b98d:X::2)                 2021-10-04T22:50:51+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd2e:9c0d:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
- 2. fd2e:9c0d::10                      				0.0%     8    0.2   0.1   0.1   0.2   0.0
+ 1. fddf:b98d:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
+ 2. fddf:b98d::10                      				0.0%     8    0.2   0.1   0.1   0.2   0.0
  3. 2803:9910:8000::1													0.0%     7    0.2   0.2   0.1   0.2   0.0
 
 ```
@@ -896,13 +896,13 @@ Los tutores aplican el filtro RPKI en el router de borde.
 Accedemos al cliente y visualizamos lo que sucede. Intente refrescarlo (presionando la letra "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd2e:9c0d:X::2)                 2021-10-04T23:09:10+0000
+cli.grpX.lac.te-labs.training (fddf:b98d:X::2)                 2021-10-04T23:09:10+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd2e:9c0d:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
- 2. fd2e:9c0d::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
- 3. fd2e:9c0d::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
+ 1. fddf:b98d:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 2. fddf:b98d::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 3. fddf:b98d::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
