@@ -27,7 +27,7 @@
 
 
 ```
-$ ansible-galaxy collection install cisco.ios
+# ansible-galaxy collection install cisco.ios
 ```
 
 - El paquete bgpq4 requerido para generar la configuración de los as_path a partir de la consulta a un IRR 
