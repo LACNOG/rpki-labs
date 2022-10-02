@@ -1,0 +1,24 @@
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+ansible_user: rtradm 
+ansible_password: 'PahbTfBjJYfswYHndM0='
+#ansible_user: frruser  
+#ansible_password: 'dalecampeon'
+ansible_python_interpreter: '/usr/bin/python3'
+
+config_dir: ./ios_config
+
+my_asn: "65002"
+my_router_id: "100.64.1.2"
+
+iborder_asn: "65000"
+iborder_ipv4: "100.64.0.10"
+iborder_ipv6: "fd34:daaf::10"
+iborder_desc: "iborder-rtr"
+
+rpki_cache_1: "100.64.0.70"
+rpki_port_1: "323"
+rpki_cache_2: "100.64.0.71"
+rpki_port_2: "323"
+
+irr_as_set: AS64135:AS-LabRPKIprivadosTutores

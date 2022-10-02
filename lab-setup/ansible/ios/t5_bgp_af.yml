@@ -1,0 +1,61 @@
+---
+#  !
+#  address-family ipv4 unicast
+#   neighbor 100.64.0.10 activate
+#   neighbor 100.64.0.10 soft-reconfiguration inbound
+#   neighbor 100.64.0.10 route-map TODO-IPv4 in
+#   neighbor 100.64.0.10 route-map TODO-IPv4 out
+#  exit-address-family
+#  !
+#  address-family ipv6 unicast
+#   neighbor fd2e:9c0d::10 activate
+#   neighbor fd2e:9c0d::10 soft-reconfiguration inbound
+#   neighbor fd2e:9c0d::10 route-map TODO-IPv6 in
+#   neighbor fd2e:9c0d::10 route-map TODO-IPv6 out
+#  exit-address-family
+# exit
+# !
+
+  - name: Configuration of Address Family BGP IPv4 ASN "{{ my_asn }}"
+    cisco.ios.ios_bgp_address_family:
+      config:
+        as_number: "{{ my_asn }}"
+        address_family:
+          - afi: ipv4
+            safi: unicast
+            neighbor:
+              - address: "{{ iborder_ipv4 }}"
+                activate: yes
+                soft_reconfiguration: yes
+                route_maps:
+                  - name: TODO-IPv4 
+                    in: true 
+                  - name: TODO-IPv4-OUT
+                    out: true 
+    tags: T5
+
+  - name: Configuration of Address Family BGP IPv6 ASN "{{ my_asn }}"
+    cisco.ios.ios_bgp_address_family:
+      config:
+        as_number: "{{ my_asn }}"
+        address_family:
+          - afi: ipv6
+            safi: unicast
+            neighbor:
+              - address: "{{ iborder_ipv6 }}"
+                activate: yes
+                soft_reconfiguration: yes
+                route_maps:
+                  - name: TODO-IPv6 
+                    in: true
+                  - name: TODO-IPv6-OUT 
+                    out: true
+    tags: T5
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t5_config.{{ ansible_date_time.iso8601 }}
+    tags: T5

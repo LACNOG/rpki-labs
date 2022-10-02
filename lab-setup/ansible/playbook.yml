@@ -1,0 +1,42 @@
+---
+#
+# Laboratorio de Automatizacion con Ansible
+#
+- name: RTR BGP Ansible deployment
+  hosts: grp2_rtr
+  gather_facts: yes 
+
+  vars_files:
+  - vars_ios.yml
+
+  tasks:
+        - include_tasks: ios/t0_clean_confg.yml
+          tags: T0
+
+        - include_tasks: ios/t1_rpki.yml
+          tags: T1
+      
+        - include_tasks: ios/t2_prefix_lists.yml
+          tags: T2
+      
+        - include_tasks: ios/t3_route_maps_todo.yml
+          tags: T3 
+      
+        - include_tasks: ios/t4_bgp.yml
+          tags: T4
+      
+        - include_tasks: ios/t5_bgp_af.yml
+          tags: T5
+
+        - include_tasks: ios/t6_bgp_as_path.yml
+          tags: T6
+      
+        - include_tasks: ios/t7_bgp_route_map_some_asn.yml
+          tags: T7
+      
+        - include_tasks: ios/t8_route_map_rpki_aspath.yml
+          tags: T8
+      
+        - include_tasks: ios/t9_bgp_route_map_rpki.yml
+          tags: T9
+

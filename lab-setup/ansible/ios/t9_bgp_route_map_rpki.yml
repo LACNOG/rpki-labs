@@ -1,0 +1,38 @@
+---
+# bgp_route_map_rpki.yml
+#
+# !
+# address-family ipv6 unicast
+#  neighbor fd34:daaf::10 activate
+#  neighbor fd34:daaf::10 soft-reconfiguration inbound
+#  neighbor fd34:daaf::10 route-map RPKI in
+#  neighbor fd34:daaf::10 route-map TODO-IPV6 out
+#  exit-address-family
+# exit
+# !
+
+  - name: Configuration of BGP IPv6 neighboor route-map RPKI for ASN "{{ my_asn }}"
+    cisco.ios.ios_bgp_address_family:
+      config:
+        as_number: "{{ my_asn }}"
+        address_family:
+          - afi: ipv6
+            safi: unicast
+            neighbor:
+              - address: "{{ iborder_ipv6 }}"
+                activate: yes
+                soft_reconfiguration: yes
+                route_maps:
+                  - name: RPKI 
+                    in: true
+                  - name: TODO-IPv6 
+                    out: true
+    tags: T9
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t9_config.{{ ansible_date_time.iso8601 }}
+    tags: T9

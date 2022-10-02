@@ -1,0 +1,47 @@
+---
+#
+# clean_confg.yml
+#
+#
+  - name: Save running config
+    cisco.ios.ios_config:
+      backup: yes 
+    tags: T0
+  
+  - name: Clean config 
+    cisco.ios.ios_config:
+      lines:
+      -  no router bgp {{ my_asn }}
+      -  no ip prefix-list DENY-ALL-IPv4 
+      -  no ip prefix-list PERMIT-ALL-IPv4 
+      -  no ipv6 prefix-list DENY-ALL-IPv6 
+      -  no ipv6 prefix-list PERMIT-ALL-IPv6 
+      -  no route-map RPKI
+      -  no route-map PERMIT-SOME-ASN
+      -  no route-map TODO-IPv4
+      -  no route-map TODO-IPv6
+      -  no route-map NADA-IPv4
+      -  no route-map NADA-IPv6
+      -  no route-map TODO-IPv4-OUT
+      -  no route-map TODO-IPv6-OUT
+      -  no bgp as-path access-list AS-PATH-PERMIT-LIST
+      match: exact
+    tags: T0
+
+  - name: Clean rpki config 
+    cisco.ios.ios_config:
+      lines:
+      - no rpki polling_period 300
+      - no rpki cache 100.64.0.70 323 preference 1
+      - no rpki cache 100.64.0.71 323 preference 2 
+      parents: rpki
+      match: exact
+    tags: T0
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t0_config.{{ ansible_date_time.iso8601 }}
+    tags: T0

@@ -1,0 +1,38 @@
+---
+# !
+# router bgp 65004
+#  bgp router-id 100.64.1.4
+#  bgp log-neighbor-changes
+#  no bgp default ipv4-unicast
+#  neighbor 100.64.0.10 remote-as 65000
+#  neighbor 100.64.0.10 description iborder-rtr
+#  neighbor fd2e:9c0d::10 remote-as 65000
+#  neighbor fd2e:9c0d::10 description iborder-rtr
+# !
+
+  
+  - name: Configuration of Global BGP ASN "{{ my_asn }}"
+    cisco.ios.ios_bgp_global:
+      config:
+        as_number: "{{ my_asn }}" 
+        bgp:
+          log_neighbor_changes: true
+          router_id: 
+            address: "{{ my_router_id }}"
+        neighbor:
+          - address: "{{ iborder_ipv4 }}"
+            description: "{{ iborder_desc }}"
+            remote_as: "{{ iborder_asn }}"
+          - address: "{{ iborder_ipv6 }}"
+            description: "{{ iborder_desc }}"
+            remote_as: "{{ iborder_asn }}"
+    tags: T4        
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t4_config.{{ ansible_date_time.iso8601 }}
+    tags: T4
+

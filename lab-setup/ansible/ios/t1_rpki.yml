@@ -1,0 +1,22 @@
+---
+#
+# ios-rpki.yml
+#
+
+  - name: RPKI validator config
+    cisco.ios.ios_config:
+      lines:
+      -  rpki polling_period 300
+      -  rpki cache {{ rpki_cache_1 }} {{ rpki_port_1 }} preference 1
+      -  rpki cache {{ rpki_cache_2 }} {{ rpki_port_2 }} preference 2
+      parents: rpki
+      match: exact
+    tags: T1
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t1_config.{{ ansible_date_time.iso8601 }}
+    tags: T1

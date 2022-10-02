@@ -1,0 +1,52 @@
+---
+#
+# ios_prefix_lists.yml
+#
+# ip prefix-list DENY-ALL-IPv4 seq 5 deny any
+# ip prefix-list PERMIT-ALL-IPv4 seq 5 permit any
+# !
+# ipv6 prefix-list DENY-ALL-IPv6 seq 5 deny any
+# ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
+
+
+  - name: Prefix List IPv4 config
+    cisco.ios.ios_prefix_lists:
+      config:
+        - afi: ipv4
+          prefix_lists:
+          - name: DENY-ALL-IPv4
+            entries:
+            - action: deny
+              sequence: 5
+              prefix: any
+          - name: PERMIT-ALL-IPv4
+            entries:
+            - action: permit 
+              sequence: 5
+              prefix: any
+    tags: T2
+
+  - name: Prefix List IPv6 config
+    cisco.ios.ios_prefix_lists:
+      config:
+        - afi: ipv6
+          prefix_lists:
+          - name: DENY-ALL-IPv6
+            entries:
+            - action: deny
+              sequence: 5
+              prefix: any
+          - name: PERMIT-ALL-IPv6
+            entries:
+            - action: permit 
+              sequence: 5
+              prefix: any
+    tags: T2
+
+  - name: save running to startup when modified
+    cisco.ios.ios_config:
+      save_when: modified
+      backup: yes
+      backup_options:
+        filename: t2_config.{{ ansible_date_time.iso8601 }}
+    tags: T2
