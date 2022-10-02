@@ -56,102 +56,334 @@ Los siguientes equipos también serán utilizados durante la práctica, sin emba
 
 
 
-## Verificando la configuración del validador RPKI FORT (*rpki1* y *rpki2*)
+## Instalar Colecciones de Ansible
 
-Uno de los tutores del Laboratorio mostrará la configuración del validador FORT (contenido del archivo ***/etc/fort/config.json*** en el servidor **rpki1** o **rpki2**):
+Instalaremos la colección de Cisco ya que es la que utilizaremos en nuestro caso, para el laboratorio:
+
 
 ```
-root@rpki1:~# more /etc/fort/config.json 
-
-{
-	"tal": "/var/fort/tal",
-	"local-repository": "/var/fort/repository",
-	"rsync-strategy": "root",
-	"shuffle-uris": true,
-	"mode": "server",
-
-	"server": {
-		"port": "323",
-		"backlog": 100,
-		"interval": {
-	            "validation": 900,
-	            "refresh": 900,
-	            "retry": 600,
-	            "expire": 7200
-	        }
-	},
-
-	"log": {
-		"color-output": true,
-		"file-name-format": "file-name"
-	},
-
-	"rsync": {
-		"program": "rsync",
-		"arguments-recursive": [
-			"--recursive",
-			"--times",
-			"$REMOTE",
-			"$LOCAL"
-		],
-		"arguments-flat": [
-			"--times",
-			"--dirs",
-			"$REMOTE",
-			"$LOCAL"
-		]
-	},
-
-	"incidences": [
-		{
-			"name": "incid-hashalg-has-params",
-			"action": "ignore"
-		}
-	],
-
-	"output": {
-		"roa": "/var/fort/fort_roas.csv"
-	}
-}
-
+$ ansible-galaxy collection install cisco.ios
 ```
 
 
 
-#### Agregamos entonces algunos route-map y listas de acceso que utilizaremos más tarde
-
-> Los siguientes los iremos explicando a medida que los utilicemos durante la práctica
->
+## Clonar el proyecto desde Github de LACNOG
 
 ```
-ip prefix-list DENY-ALL-IPv4 seq 5 deny any
-ip prefix-list PERMIT-ALL-IPv4 seq 5 permit any
-!
-ipv6 prefix-list DENY-ALL-IPv6 seq 5 deny any
-ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
-!
-route-map PERMIT-SOME-ASN permit 10
- match as-path AS-PATH-PERMIT-LIST
-!
-route-map TODO-IPv6 permit 10
- match ipv6 address prefix-list PERMIT-ALL-IPv6
-!
-route-map NADA-IPv6 permit 10
- match ipv6 address prefix-list DENY-ALL-IPv6
-!
-route-map TODO-IPv4 permit 10
- match ip address prefix-list PERMIT-ALL-IPv4
-!
-route-map NADA-IPv4 permit 10
- match ipv6 address prefix-list DENY-ALL-IPv4
-!
-route-map RPKI permit 10
- match rpki valid
- set local-preference 200
-!
-route-map RPKI permit 20
- match rpki notfound
- set local-preference 100
+$ git clone https://github.com/LACNOG/rpki-labs.git
 ```
 
+
+
+## Estructura de archivos
+
+En el directorio ansible se encuentran los archivos  que vamos a utilizar en este laboratorio 
+
+```
+$ cd rpki-labs/lab-setup
+$ tree ansible/
+ansible
+├── ansible.cfg
+├── hosts
+├── ios
+│   ├── bgp_af.yml
+│   ├── bgp_as_path.yml
+│   ├── bgp_route_map_rpki.yml
+│   ├── bgp.yml
+│   ├── clean_confg.yml
+│   ├── prefix_lists.yml
+│   ├── route_map_rpki_aspath.yml
+│   ├── route_maps.yml
+│   └── rpki.yml
+├── playbook.yml
+└── vars_ios.yml
+```
+
+
+
+## Descripción del playbook a correr, inventario y variables
+
+Para correr un playbook en Ansible utilizamos el comando ansible-playbook indicando el inventario de hosts destino de las tareas y como entrada el archivo playbook donde se definen los parametros generales y la lista de tareas. 
+
+```
+$ ansible-playbook -i hosts playbook.yml
+```
+
+El playbook para la automatización contiene  ***"tags"*** para ejecutar cada tarea de manera individual y poder apreciar los cambios en el router.
+
+```
+$ cd ansible
+$ cat playbook.yml
+---
+#
+# Laboratorio de Automatizacion con Ansible
+#
+- name: RTR BGP Ansible deployment
+  hosts: grp_rtr
+  gather_facts: no
+  
+  vars_files:
+  - vars_ios.yml
+ 
+  tasks:
+        - include_tasks: ios/t0_clean_confg.yml
+          tags: T0
+
+        - include_tasks: ios/t1_rpki.yml
+          tags: T1
+
+        - include_tasks: ios/t2_prefix_lists.yml
+          tags: T2
+
+        - include_tasks: ios/t3_route_maps_todo.yml
+          tags: T3
+
+        - include_tasks: ios/t4_bgp.yml
+          tags: T4
+
+        - include_tasks: ios/t5_bgp_af.yml
+          tags: T5
+
+        - include_tasks: ios/t6_bgp_as_path.yml
+          tags: T6
+          
+        - include_tasks: ios/t7_bgp_route_map_some_asn.yml
+          tags: T7
+
+        - include_tasks: ios/t8_route_map_rpki_aspath.yml
+          tags: T8
+
+        - include_tasks: ios/t9_bgp_route_map_rpki.yml
+          tags: T9
+
+```
+
+El inventario esta definido en el archivo hosts y en este caso solo contiene la descripción de nuestro router. 
+
+```
+$ cat hosts
+[grp_rtr]
+100.100.X.1
+```
+
+Es necesario modificar la dirección IP por la asignada a cada grupo. Pueden hacerlo con los editores disponibles (nano, vim) o recrearlo utilizando el comando:
+
+```
+$ cat <<EOF > hosts
+[grp_rtr]
+100.100.X.1
+EOF
+```
+
+Es necesario también cambiar algunas variables definidas en el archivo var_ios.yml por los valores asignados a cada grupo. 
+
+```
+$ cat vars_ios.yml
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+ansible_user: rtradm 
+ansible_password: 'xxxxxxxx'
+
+ansible_python_interpreter: '/usr/bin/python3'
+
+config_dir: ./ios_config
+
+my_asn: "6500X"
+my_router_id: "100.64.1.X"
+
+iborder_asn: "65000"
+iborder_ipv4: "100.64.0.10"
+iborder_ipv6: "fd34:daaf::10"
+iborder_desc: "iborder-rtr"
+
+rpki_cache_1: "100.64.0.70"
+rpki_port_1: "323"
+rpki_cache_2: "100.64.0.71"
+rpki_port_2: "323"
+
+irr_as_set: AS64135:AS-LabRPKIprivadosTutores
+```
+
+Las variables a modificar con los valores asignados a cada grupo son:  
+
+> **ansible_password:** 
+> **my_asn:**
+> **my_router_id:**
+
+Por último podemos configurar no recibir warnings en la ejecución de ansible-playbook creando el archivo ansible.cfg mediante el siguiente comando:  
+
+```
+$ cat <<EOF > ansible.cfg 
+[defaults]
+action_warnings = false
+EOF
+```
+
+
+
+## Manos a la obra!!!!
+
+A continuación describimos cada tarea definida en el playbook y los comandos a utilizar para aplicarlos
+
+#### T0: Limpieza de configuración manual aplicada en la práctica 
+
+En este paso previo volvemos la configuración del router al estado inicial. 
+
+Podemos ver la tarea a ejecutar contenida en el archivo clean_confg.yml
+
+```
+$ cat ios/t0_clean_confg.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T0 palybook.yml
+```
+
+Verificamos el cambio de la configuración en el router:
+
+```
+grpX-rtr# sh run
+```
+
+#### T1: Configuramos el validador RPKI
+
+El archivo rpki.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t1_rpki.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T1 palybook.yml
+```
+
+#### T2: Creamos las prefix-List PERMIT-ALL y DENY-ALL
+
+El archivo prefix_lists.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t2_prefix_lists.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts --t T2 palybook.yml
+```
+
+#### T3: Creamos los route-maps TODO-IPv4  y TODO IPv6
+
+El archivo route_maps.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t3_route_maps_todo.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T3 palybook.yml
+```
+
+#### T4: Configuramos router BGP AS 6500X
+
+El archivo bgp.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t4_bgp.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T4 palybook.yml
+```
+
+#### T5: Configuramos los neighbors BGP desde BGP Address Family  
+
+El archivo bgp_af.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t5_bgp_af.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T5 palybook.yml
+```
+
+#### T6: Generamos los bgp as-path access-list usando el comando bgpq4 y lo aplicamos al route-map PERMIT-SOME-ASN
+
+El archivo bgp.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t6_bgp_as_path.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T6 palybook.yml
+```
+
+#### T7:  Aplicamos ahora el Route-Map PERMIT-SOME-ASN a la entrada del BGP neigboor 
+
+El archivo route_map_some_asn.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t7_bgp_route_map_some_asn.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T7 palybook.yml
+```
+
+#### T8: Agregamos match as-path en el route-map RPKI (valid, notfound)
+
+El archivo route_map_rpki_aspath.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t8_route_map_rpki_aspath.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T8 palybook.yml
+```
+
+#### T9:  Aplicamos ahora el Route-Map RPKI a la entrada del BGP neigboor 
+
+El archivo bgp_route_map_rpki_aspath.yml describe la tarea a ejecutar:
+
+```
+$ cat ios/t9_bgp_route_map_rpki_aspath.yml
+```
+
+Para correr esta tarea ejecutamos el comando:
+
+```
+$ ansible-playbook -i hosts -t T9 palybook.yml
+```
+
+#### T0-T9: Ejecutar Playbook completo
+
+Para ejecutar el playbook completo incluyendo todas las tareas, invocando todos los tags, utilizamos ***"all"*** como referencia: 
+
+```
+$ ansible-playbook -i hosts -t all palybook.yml
+```
+
+Si queremos ejecutar algunas tareas en particular podemos seleccionarlas a modo de lista. Por ejemplo para ejecutar las tareas T0 a la T6:
+
+```
+$ ansible-playbooks -i hosts -t T0,T1,T2,T3,T4,T5,T6 playbook.yml
+```
 
