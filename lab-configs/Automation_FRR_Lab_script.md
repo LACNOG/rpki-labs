@@ -193,7 +193,7 @@ my_router_id: "100.64.1.X"
 
 iborder_asn: "65000"
 iborder_ipv4: "100.64.0.10"
-iborder_ipv6: "fd34:daaf::10"
+iborder_ipv6: "fddf:b98d::10"
 iborder_desc: "iborder-rtr"
 
 rpki_cache_1: "100.64.0.70"
@@ -216,6 +216,7 @@ Por último podemos configurar no recibir warnings en la ejecución de ansible-p
 $ cat <<EOF > ansible.cfg 
 [defaults]
 action_warnings = false
+host_key_checking = false
 EOF
 ```
 

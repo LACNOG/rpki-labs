@@ -3,10 +3,10 @@
 #
 # !
 # address-family ipv6 unicast
-#  neighbor fd34:daaf::10 activate
-#  neighbor fd34:daaf::10 soft-reconfiguration inbound
-#  neighbor fd34:daaf::10 route-map RPKI in
-#  neighbor fd34:daaf::10 route-map TODO-IPV6 out
+#  neighbor fddf:b98d::10 activate
+#  neighbor fddf:b98d::10 soft-reconfiguration inbound
+#  neighbor fddf:b98d::10 route-map RPKI in
+#  neighbor fddf:b98d::10 route-map TODO-IPV6 out
 #  exit-address-family
 # exit
 # !

@@ -8,10 +8,10 @@
 #  exit-address-family
 #  !
 #  address-family ipv6 unicast
-#   neighbor fd2e:9c0d::10 activate
-#   neighbor fd2e:9c0d::10 soft-reconfiguration inbound
-#   neighbor fd2e:9c0d::10 route-map TODO-IPv6 in
-#   neighbor fd2e:9c0d::10 route-map TODO-IPv6 out
+#   neighbor fddf:b98d::10 activate
+#   neighbor fddf:b98d::10 soft-reconfiguration inbound
+#   neighbor fddf:b98d::10 route-map TODO-IPv6 in
+#   neighbor fddf:b98d::10 route-map TODO-IPv6 out
 #  exit-address-family
 # exit
 # !

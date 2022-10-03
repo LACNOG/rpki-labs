@@ -6,8 +6,8 @@
 #  no bgp default ipv4-unicast
 #  neighbor 100.64.0.10 remote-as 65000
 #  neighbor 100.64.0.10 description iborder-rtr
-#  neighbor fd2e:9c0d::10 remote-as 65000
-#  neighbor fd2e:9c0d::10 description iborder-rtr
+#  neighbor fddf:b98d::10 remote-as 65000
+#  neighbor fddf:b98d::10 description iborder-rtr
 # !
 
   

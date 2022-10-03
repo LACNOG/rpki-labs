@@ -12,7 +12,7 @@ my_router_id: "100.64.1.2"
 
 iborder_asn: "65000"
 iborder_ipv4: "100.64.0.10"
-iborder_ipv6: "fd34:daaf::10"
+iborder_ipv6: "fddf:b98d::10"
 iborder_desc: "iborder-rtr"
 
 rpki_cache_1: "100.64.0.70"
