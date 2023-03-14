@@ -239,7 +239,7 @@ $ cat ios/t0_clean_confg.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T0 palybook.yml
+$ ansible-playbook -i hosts -t T0 playbook.yml
 ```
 
 Verificamos el cambio de la configuración en el router:
@@ -259,7 +259,7 @@ $ cat ios/t1_rpki.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T1 palybook.yml
+$ ansible-playbook -i hosts -t T1 playbook.yml
 ```
 
 #### T2: Creamos las prefix-List PERMIT-ALL y DENY-ALL
@@ -273,7 +273,7 @@ $ cat ios/t2_prefix_lists.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts --t T2 palybook.yml
+$ ansible-playbook -i hosts --t T2 playbook.yml
 ```
 
 #### T3: Creamos los route-maps TODO-IPv4  y TODO IPv6
@@ -287,7 +287,7 @@ $ cat ios/t3_route_maps_todo.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T3 palybook.yml
+$ ansible-playbook -i hosts -t T3 playbook.yml
 ```
 
 #### T4: Configuramos router BGP AS 6500X
@@ -301,7 +301,7 @@ $ cat ios/t4_bgp.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T4 palybook.yml
+$ ansible-playbook -i hosts -t T4 playbook.yml
 ```
 
 #### T5: Configuramos los neighbors BGP desde BGP Address Family  
@@ -315,7 +315,7 @@ $ cat ios/t5_bgp_af.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T5 palybook.yml
+$ ansible-playbook -i hosts -t T5 playbook.yml
 ```
 
 #### T6: Generamos los bgp as-path access-list usando el comando bgpq4 y lo aplicamos al route-map PERMIT-SOME-ASN
@@ -329,7 +329,7 @@ $ cat ios/t6_bgp_as_path.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T6 palybook.yml
+$ ansible-playbook -i hosts -t T6 playbook.yml
 ```
 
 #### T7:  Aplicamos ahora el Route-Map PERMIT-SOME-ASN a la entrada del BGP neigboor 
@@ -343,7 +343,7 @@ $ cat ios/t7_bgp_route_map_some_asn.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T7 palybook.yml
+$ ansible-playbook -i hosts -t T7 playbook.yml
 ```
 
 #### T8: Agregamos match as-path en el route-map RPKI (valid, notfound)
@@ -357,7 +357,7 @@ $ cat ios/t8_route_map_rpki_aspath.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T8 palybook.yml
+$ ansible-playbook -i hosts -t T8 playbook.yml
 ```
 
 #### T9:  Aplicamos ahora el Route-Map RPKI a la entrada del BGP neigboor 
@@ -371,7 +371,7 @@ $ cat ios/t9_bgp_route_map_rpki_aspath.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts -t T9 palybook.yml
+$ ansible-playbook -i hosts -t T9 playbook.yml
 ```
 
 #### T0-T9: Ejecutar Playbook completo
@@ -379,7 +379,7 @@ $ ansible-playbook -i hosts -t T9 palybook.yml
 Para ejecutar el playbook completo incluyendo todas las tareas, invocando todos los tags, utilizamos ***"all"*** como referencia: 
 
 ```
-$ ansible-playbook -i hosts -t all palybook.yml
+$ ansible-playbook -i hosts -t all playbook.yml
 ```
 
 Si queremos ejecutar algunas tareas en particular podemos seleccionarlas a modo de lista. Por ejemplo para ejecutar las tareas T0 a la T6:
