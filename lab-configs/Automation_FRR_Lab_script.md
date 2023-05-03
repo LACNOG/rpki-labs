@@ -8,8 +8,11 @@
 ***Nicolas Antoniello*** (*GitHub: 65007*),
 ***Guillermo Cicileo,***
 ***Erika Vega***
+***Silvia Chavez***
 
-> (2022-10-03)
+
+
+> (2023-05-08)
 
 ------
 
@@ -273,7 +276,7 @@ $ cat ios/t2_prefix_lists.yml
 Para correr esta tarea ejecutamos el comando:
 
 ```
-$ ansible-playbook -i hosts --t T2 palybook.yml
+$ ansible-playbook -i hosts -t T2 palybook.yml
 ```
 
 #### T3: Creamos los route-maps TODO-IPv4  y TODO IPv6
