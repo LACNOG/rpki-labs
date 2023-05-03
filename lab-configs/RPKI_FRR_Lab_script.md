@@ -804,7 +804,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
  1. fddf:b98d:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
  2. fddf:b98d::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
- 3. 2001:7fb:fd02::1                          0.0%   130    0.2   0.1   0.1   0.4   0.1
+ 3. 2803:9910:8000::1                         0.0%   130    0.2   0.1   0.1   0.4   0.1
 ```
 
 
