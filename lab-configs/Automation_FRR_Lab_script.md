@@ -7,7 +7,7 @@
 ***Santiago Aggio***,
 ***Nicolas Antoniello*** (*GitHub: 65007*),
 ***Guillermo Cicileo,***
-***Erika Vega***
+***Erika Vega,***
 ***Silvia Chavez***
 
 > (2023-05-08)
