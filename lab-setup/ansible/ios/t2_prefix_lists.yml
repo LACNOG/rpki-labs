@@ -9,7 +9,7 @@
 # ipv6 prefix-list PERMIT-ALL-IPv6 seq 5 permit any
 
 
-  - name: Prefix List IPv4 config
+  - name: T2 - Prefix List IPv4 config
     cisco.ios.ios_prefix_lists:
       config:
         - afi: ipv4
@@ -26,7 +26,7 @@
               prefix: any
     tags: T2
 
-  - name: Prefix List IPv6 config
+  - name: T2 - Prefix List IPv6 config
     cisco.ios.ios_prefix_lists:
       config:
         - afi: ipv6
@@ -43,7 +43,7 @@
               prefix: any
     tags: T2
 
-  - name: save running to startup when modified
+  - name: T2 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

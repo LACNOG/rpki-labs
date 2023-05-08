@@ -3,7 +3,7 @@
 # ios-rpki.yml
 #
 
-  - name: RPKI validator config
+  - name: T1 - RPKI validator config
     cisco.ios.ios_config:
       lines:
       -  rpki polling_period 300
@@ -13,7 +13,7 @@
       match: exact
     tags: T1
 
-  - name: save running to startup when modified
+  - name: T1 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

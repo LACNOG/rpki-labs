@@ -16,7 +16,7 @@
 # exit
 # !
 
-  - name: Add match as-path and rpki notfound in Route Map RPKI 
+  - name: T8 - Add match as-path and rpki valid in Route Map RPKI 
     cisco.ios.ios_config:
       lines:
       - match as-path AS-PATH-PERMIT-LIST
@@ -26,7 +26,7 @@
       match: exact
     tags: T8
 
-  - name: Add match as-path and rpki notfound in Route Map RPKI
+  - name: T8 - Add match as-path and rpki notfound in Route Map RPKI
     cisco.ios.ios_config:
       lines:
       - match as-path AS-PATH-PERMIT-LIST
@@ -36,7 +36,7 @@
       match: exact
     tags: T8
 
-  - name: save running to startup when modified
+  - name: T8 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

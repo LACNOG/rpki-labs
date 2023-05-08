@@ -6,12 +6,12 @@
 #  no bgp default ipv4-unicast
 #  neighbor 100.64.0.10 remote-as 65000
 #  neighbor 100.64.0.10 description iborder-rtr
-#  neighbor fddf:b98d::10 remote-as 65000
-#  neighbor fddf:b98d::10 description iborder-rtr
+#  neighbor fd34:daaf::10 remote-as 65000
+#  neighbor fd34:daaf::10 description iborder-rtr
 # !
 
   
-  - name: Configuration of Global BGP ASN "{{ my_asn }}"
+  - name: T4 - Configuration of Global BGP ASN "{{ my_asn }}"
     cisco.ios.ios_bgp_global:
       config:
         as_number: "{{ my_asn }}" 
@@ -28,7 +28,7 @@
             remote_as: "{{ iborder_asn }}"
     tags: T4        
 
-  - name: save running to startup when modified
+  - name: T4 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

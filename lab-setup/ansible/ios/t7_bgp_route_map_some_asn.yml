@@ -11,7 +11,7 @@
 # exit
 # !
 
-  - name: Configuration of BGP IPv6 neighboor route-map PERMIT-SOME-ASN for ASN "{{ my_asn }}"
+  - name: T7 - Configuration of BGP IPv6 neighboor route-map PERMIT-SOME-ASN for ASN "{{ my_asn }}"
     cisco.ios.ios_bgp_address_family:
       config:
         as_number: "{{ my_asn }}"
@@ -29,7 +29,7 @@
                     out: true
     tags: T7
 
-  - name: save running to startup when modified
+  - name: T7 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

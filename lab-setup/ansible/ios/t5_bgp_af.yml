@@ -16,7 +16,7 @@
 # exit
 # !
 
-  - name: Configuration of Address Family BGP IPv4 ASN "{{ my_asn }}"
+  - name: T5 - Configuration of Address Family BGP IPv4 ASN "{{ my_asn }}"
     cisco.ios.ios_bgp_address_family:
       config:
         as_number: "{{ my_asn }}"
@@ -34,7 +34,7 @@
                     out: true 
     tags: T5
 
-  - name: Configuration of Address Family BGP IPv6 ASN "{{ my_asn }}"
+  - name: T5 - Configuration of Address Family BGP IPv6 ASN "{{ my_asn }}"
     cisco.ios.ios_bgp_address_family:
       config:
         as_number: "{{ my_asn }}"
@@ -52,7 +52,7 @@
                     out: true
     tags: T5
 
-  - name: save running to startup when modified
+  - name: T5 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes

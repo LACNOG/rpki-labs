@@ -3,12 +3,12 @@
 # clean_confg.yml
 #
 #
-  - name: Save running config
+  - name: T0 - Save running config
     cisco.ios.ios_config:
       backup: yes 
     tags: T0
   
-  - name: Clean config 
+  - name: T0 - Clean config 
     cisco.ios.ios_config:
       lines:
       -  no router bgp {{ my_asn }}
@@ -28,7 +28,7 @@
       match: exact
     tags: T0
 
-  - name: Clean rpki config 
+  - name: T0 - Clean rpki config 
     cisco.ios.ios_config:
       lines:
       - no rpki polling_period 300
@@ -38,7 +38,7 @@
       match: exact
     tags: T0
 
-  - name: save running to startup when modified
+  - name: T0 - Save running to startup when modified
     cisco.ios.ios_config:
       save_when: modified
       backup: yes
