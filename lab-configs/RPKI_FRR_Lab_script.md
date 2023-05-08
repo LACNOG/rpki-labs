@@ -240,6 +240,34 @@ Sep 27 18:18:13 WRN: First validation cycle successfully ended, now you can conn
 
 
 
+### Visualizando los ROAs por medio de un cliente RTR
+
+Para simular el comportamiento de nuestro router y verificar el protocolo RTR (RPKI To Router) contra el validador, ejecutamos el comando rtrclient apuntando a la dirección IP del validador (***100.64.0.70*** o ***100.64.0.71***) y al puerto ***TCP 323*** donde responde el validador. El resto de los parámetros es para indicar el formato de salida (csv) y el archivo donde almacenar la información.  
+
+```
+rtrclient -e -t csv -o roas.csv tcp 100.64.0.70 323
+```
+
+ Podemos verificar si nuestros bloques IPv4, IPv6 y el respectivo ASN se encuentran en el listado de ROAs válidos
+
+```
+grep "bloque_IPv4" roas.csv
+```
+
+ o
+
+```
+grep "bloque_IPv6" roas.csv
+```
+
+ o
+
+```
+grep ", ASN$" roas.csv
+```
+
+
+
 ## Verificando la configuración del router de borde ***iborder-rtr***
 
 Uno de los tutores del Laboratorio mostrará la configuración del router de borde (contenido del archivo ***/etc/frr/frr.conf*** en el equipo **iborder-rtr**):
