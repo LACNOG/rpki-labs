@@ -7,3 +7,7 @@
 - [Guía de la práctica de ***Interconexión y RPKI***](./lab-configs/RPKI_FRR_Lab_script.md) - ES
 - [Guía de la práctica de ***Automatización con Ansible y BGPq4***](./lab-configs/Automation_FRR_Lab_script.md) - ES
 
+
+
+**Formulario de reserva de Laboratorio (LACNIC 39):** https://forms.gle/KmQXZrAQZL48tLju7
+
