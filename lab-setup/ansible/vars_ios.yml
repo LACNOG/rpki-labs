@@ -7,8 +7,8 @@ ansible_python_interpreter: '/usr/bin/python3'
 
 config_dir: ./ios_config
 
-my_asn: "65002"
-my_router_id: "100.64.1.2"
+my_asn: "650XX"
+my_router_id: "100.64.1.X"
 
 iborder_asn: "65000"
 iborder_ipv4: "100.64.0.10"

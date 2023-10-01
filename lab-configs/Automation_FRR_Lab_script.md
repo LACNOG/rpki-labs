@@ -10,7 +10,7 @@
 ***Erika Vega,***
 ***Silvia Chavez***
 
-> (2023-05-08)
+> (2023-10-01)
 
 ------
 
@@ -189,7 +189,7 @@ ansible_python_interpreter: '/usr/bin/python3'
 
 config_dir: ./ios_config
 
-my_asn: "6500X"
+my_asn: "650XX"
 my_router_id: "100.64.1.X"
 
 iborder_asn: "65000"
@@ -208,18 +208,10 @@ irr_as_set: AS64135:AS-LabRPKIprivadosTutores
 Las variables a modificar con los valores asignados a cada grupo son:  
 
 > **ansible_password:** 
+>
 > **my_asn:**
+>
 > **my_router_id:**
-
-Por último podemos configurar no recibir warnings en la ejecución de ansible-playbook creando el archivo ansible.cfg mediante el siguiente comando:  
-
-```
-$ cat <<EOF > ansible.cfg 
-[defaults]
-action_warnings = false
-host_key_checking = false
-EOF
-```
 
 
 

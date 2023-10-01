@@ -3,7 +3,7 @@
 # Laboratorio de Automatizacion con Ansible
 #
 - name: RTR BGP Ansible deployment
-  hosts: grp2_rtr
+  hosts: grp_rtr
   gather_facts: yes 
 
   vars_files:

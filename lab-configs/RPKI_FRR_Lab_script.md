@@ -10,7 +10,7 @@
 ***Erika Vega,***
 ***Silvia Chavez***
 
-> (2023-05-08)
+> (2023-10-01)
 
 ------
 
@@ -691,7 +691,10 @@ RPKI validation codes: V valid, I invalid, N Not found
 Para conectar el router al validador RPKI podemos utilizar la dirección IPv4 del validador o el nombre de dominio del mismo... en este caso utilizaremos las direcciones IPv4:
 
 **rpki1**:  *100.64.0.70*
-**rpki2**:  *100.64.0.70*
+
+**rpki2**:  *100.64.0.71*
+
+
 
 Y el puerto TCP que configuramos en los servidores, en nuestro caso ambos en el puerto 323.
 
@@ -845,7 +848,7 @@ BGP routing table entry for 2803:9910:8000::/48, version 155
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
   fddd:8cf8:0:1::1 fddd:8cf8:0:1::2 fddd:8cf8:0:1::3 fddd:8cf8:0:1::4 fddd:8cf8:0:1::5
-  65002
+  65000 65002
     fddd:8cf8:0:1::2 from fddd:8cf8:0:1::2 (100.64.1.2)
     (fe80::216:3eff:fe8b:4d79) (used)
       Origin IGP, metric 0, valid, external, best (First path received), rpki validation-state: invalid
