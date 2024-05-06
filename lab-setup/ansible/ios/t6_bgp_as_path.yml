@@ -39,6 +39,44 @@
 #  match as-path AS-PATH-PERMIT-LIST
 # !
 
+  - name: T6 - 60001 x 60061
+    ansible.builtin.replace:
+      path: ./template/bgp_as_path.j2
+      regexp: '60001'
+      replace: '60061'
+    tags: T6
+  
+  - name: T6 - 60002 x 60062
+    ansible.builtin.replace:
+      path: ./template/bgp_as_path.j2
+      regexp: '60002'
+      replace: '60062'
+    tags: T6
+
+  - name: T6 - 60003 x 60063
+    ansible.builtin.replace:
+      path: ./template/bgp_as_path.j2
+      regexp: '60003'
+      replace: '60063'
+    tags: T6
+
+  - name: T6 - 60004 x 60064
+    ansible.builtin.replace:
+      path: ./template/bgp_as_path.j2
+      regexp: '60004'
+      replace: '60064'
+    tags: T6
+
+  - name: T6 - 60005 x 60065
+    ansible.builtin.replace:
+      path: ./template/bgp_as_path.j2
+      regexp: '60005'
+      replace: '60065'
+    tags: T6
+
+
+
+
   - name: T6 - Route Map AS-PATH
     cisco.ios.ios_config:
       lines:
