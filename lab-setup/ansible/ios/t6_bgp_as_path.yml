@@ -29,11 +29,6 @@
     local_action: copy content="{{ ip_as_path.stdout | regex_replace('ip', 'bgp', ignorecase=True) }}" dest="./template/bgp_as_path.j2"
     tags: T6
 
-  - name: T6 - Configurable backup path
-    cisco.ios.ios_config:
-      src: template/bgp_as_path.j2
-    tags: T6
-
 # !
 # route-map PERMIT-SOME-ASN permit 10
 #  match as-path AS-PATH-PERMIT-LIST
@@ -73,7 +68,11 @@
       regexp: '60005'
       replace: '60065'
     tags: T6
-
+  
+  - name: T6 - Configurable backup path
+    cisco.ios.ios_config:
+      src: template/bgp_as_path.j2
+    tags: T6
 
 
 
