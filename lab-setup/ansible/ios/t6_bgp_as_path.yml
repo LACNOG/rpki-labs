@@ -34,39 +34,39 @@
 #  match as-path AS-PATH-PERMIT-LIST
 # !
 
-  - name: T6 - 60001 x 60061
+  - name: T6 - 65001 x 65061
     ansible.builtin.replace:
       path: ./template/bgp_as_path.j2
-      regexp: '60001'
-      replace: '60061'
+      regexp: '65001'
+      replace: '65061'
     tags: T6
   
-  - name: T6 - 60002 x 60062
+  - name: T6 - 65002 x 65062
     ansible.builtin.replace:
       path: ./template/bgp_as_path.j2
-      regexp: '60002'
-      replace: '60062'
+      regexp: '65002'
+      replace: '65062'
     tags: T6
 
-  - name: T6 - 60003 x 60063
+  - name: T6 - 65003 x 65063
     ansible.builtin.replace:
       path: ./template/bgp_as_path.j2
-      regexp: '60003'
-      replace: '60063'
+      regexp: '65003'
+      replace: '65063'
     tags: T6
 
-  - name: T6 - 60004 x 60064
+  - name: T6 - 65004 x 65064
     ansible.builtin.replace:
       path: ./template/bgp_as_path.j2
-      regexp: '60004'
-      replace: '60064'
+      regexp: '65004'
+      replace: '65064'
     tags: T6
 
-  - name: T6 - 60005 x 60065
+  - name: T6 - 65005 x 65065
     ansible.builtin.replace:
       path: ./template/bgp_as_path.j2
-      regexp: '60005'
-      replace: '60065'
+      regexp: '65005'
+      replace: '65065'
     tags: T6
   
   - name: T6 - Configurable backup path
