@@ -29,52 +29,15 @@
     local_action: copy content="{{ ip_as_path.stdout | regex_replace('ip', 'bgp', ignorecase=True) }}" dest="./template/bgp_as_path.j2"
     tags: T6
 
-# !
-# route-map PERMIT-SOME-ASN permit 10
-#  match as-path AS-PATH-PERMIT-LIST
-# !
-
-  - name: T6 - 65001 x 65061
-    ansible.builtin.replace:
-      path: ./template/bgp_as_path.j2
-      regexp: '65001'
-      replace: '65061'
-    tags: T6
-  
-  - name: T6 - 65002 x 65062
-    ansible.builtin.replace:
-      path: ./template/bgp_as_path.j2
-      regexp: '65002'
-      replace: '65062'
-    tags: T6
-
-  - name: T6 - 65003 x 65063
-    ansible.builtin.replace:
-      path: ./template/bgp_as_path.j2
-      regexp: '65003'
-      replace: '65063'
-    tags: T6
-
-  - name: T6 - 65004 x 65064
-    ansible.builtin.replace:
-      path: ./template/bgp_as_path.j2
-      regexp: '65004'
-      replace: '65064'
-    tags: T6
-
-  - name: T6 - 65005 x 65065
-    ansible.builtin.replace:
-      path: ./template/bgp_as_path.j2
-      regexp: '65005'
-      replace: '65065'
-    tags: T6
-  
   - name: T6 - Configurable backup path
     cisco.ios.ios_config:
       src: template/bgp_as_path.j2
     tags: T6
 
-
+# !
+# route-map PERMIT-SOME-ASN permit 10
+#  match as-path AS-PATH-PERMIT-LIST
+# !
 
   - name: T6 - Route Map AS-PATH
     cisco.ios.ios_config:
