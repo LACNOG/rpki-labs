@@ -20,10 +20,10 @@
           router_id: 
             address: "{{ my_router_id }}"
         neighbor:
-          - address: "{{ iborder_ipv4 }}"
+          - neighbor_address: "{{ iborder_ipv4 }}"
             description: "{{ iborder_desc }}"
             remote_as: "{{ iborder_asn }}"
-          - address: "{{ iborder_ipv6 }}"
+          - neighbor_address: "{{ iborder_ipv6 }}"
             description: "{{ iborder_desc }}"
             remote_as: "{{ iborder_asn }}"
     tags: T4        

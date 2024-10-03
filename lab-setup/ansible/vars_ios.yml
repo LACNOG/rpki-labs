@@ -1,7 +1,7 @@
 ansible_connection: ansible.netcommon.network_cli
 ansible_network_os: cisco.ios.ios
 ansible_user: rtradm 
-ansible_password: 'xxxxxxxx'
+ansible_password: 'xxxxxxxxx'
 
 ansible_python_interpreter: '/usr/bin/python3'
 
@@ -12,7 +12,7 @@ my_router_id: "100.64.1.X"
 
 iborder_asn: "65000"
 iborder_ipv4: "100.64.0.10"
-iborder_ipv6: "fd40:729b::10"
+iborder_ipv6: "fd39:67db::10"
 iborder_desc: "iborder-rtr"
 
 rpki_cache_1: "100.64.0.70"
