@@ -240,7 +240,7 @@ Sep 27 18:18:13 WRN: First validation cycle successfully ended, now you can conn
 
 
 
-### Viewing ROAs via an RTR client
+### Viewing ROAs via an RTR client (this must be executed in ***cli*** device)
 
 To simulate the behavior of our router and verify the RTR (RPKI To Router) protocol against the validator, we run the rtrclient command pointing to the validator's IP address (***100.64.0.70*** or ***100.64.0.71***) and to the ***TCP 323*** port where the validator responds. The rest of the parameters are to indicate the output format (csv) and the file where to store the information.
 
