@@ -10,7 +10,7 @@
 ***Erika Vega,***
 ***Silvia Chavez***
 
-> Updated: (2024-10-21)
+> Updated: (2025-03-08)
 
 ------
 
@@ -28,19 +28,19 @@
       HOST           IPv4 ADDRESS               IPv6 ADDRESS
 
 +--------------+-----------------------+-----------------------------+
-| grpX-cli     | 100.100.X.2 (eth0)    | fd11:c858:X::2 (eth0)        |
+| grpX-cli     | 100.100.X.2 (eth0)    | fd3a:d409:X::2 (eth0)        |
 +--------------+-----------------------+-----------------------------+
-| grpX-rtr     | 100.64.1.X (eth0)     | fd11:c858:X::1 (eth1)        |
-|              | 100.100.X.65 (eth2)   | fd11:c858:X:64::1 (eth2)     |
-|              | 100.100.X.193 (eth4)  | fd11:c858:X:192::1 (eth4)    |
-|              | 100.100.X.129 (eth3)  | fd11:c858:X:128::1 (eth3)    |
-|              | 100.100.X.1 (eth1)    | fd11:c858:0:1::X (eth0)      |
+| grpX-rtr     | 100.64.1.X (eth0)     | fd3a:d409:X::1 (eth1)        |
+|              | 100.100.X.65 (eth2)   | fd3a:d409:X:64::1 (eth2)     |
+|              | 100.100.X.193 (eth4)  | fd3a:d409:X:192::1 (eth4)    |
+|              | 100.100.X.129 (eth3)  | fd3a:d409:X:128::1 (eth3)    |
+|              | 100.100.X.1 (eth1)    | fd3a:d409:0:1::X (eth0)      |
 +--------------+-----------------------+-----------------------------+
-| iborder-rtr  | 198.18.0.2 (wg0)      | fd11:c858::10 (eth0)         |
+| iborder-rtr  | 198.18.0.2 (wg0)      | fd3a:d409::10 (eth0)         |
 +--------------+-----------------------+-----------------------------+
-| rpki1        | 100.64.0.70 (eth0)    | fd11:c858::70 (eth0)         |
+| rpki1        | 100.64.0.70 (eth0)    | fd3a:d409::70 (eth0)         |
 +--------------------------------------+-----------------------------+
-| rpki2        | 100.64.0.71 (eth0)    | fd11:c858::71 (eth0)         |
+| rpki2        | 100.64.0.71 (eth0)    | fd3a:d409::71 (eth0)         |
 +--------------+-----------------------+-----------------------------+
 ```
 
@@ -290,12 +290,12 @@ service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
 ip route 198.18.0.2/32 172.30.0.1
-ipv6 route ::/0 fd11:c858::1
+ipv6 route ::/0 fd3a:d409::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.0.10/22
- ipv6 address fd11:c858::10/48
+ ipv6 address fd3a:d409::10/48
 !
 interface wg0
  description "ISP LACNOG"
@@ -314,12 +314,12 @@ router bgp 65000
  ...
  neighbor 172.30.0.1 remote-as 64135
  neighbor 172.30.0.1 description iborder-rtr-LACNOG
- neighbor fd11:c858:0:1::1 remote-as 65001
- neighbor fd11:c858:0:1::1 description grp1-rtr
- neighbor fd11:c858:0:1::2 remote-as 65002
- neighbor fd11:c858:0:1::2 description grp2-rtr
- neighbor fd11:c858:0:1::3 remote-as 65003
- neighbor fd11:c858:0:1::3 description grp3-rtr
+ neighbor fd3a:d409:0:1::1 remote-as 65001
+ neighbor fd3a:d409:0:1::1 description grp1-rtr
+ neighbor fd3a:d409:0:1::2 remote-as 65002
+ neighbor fd3a:d409:0:1::2 description grp2-rtr
+ neighbor fd3a:d409:0:1::3 remote-as 65003
+ neighbor fd3a:d409:0:1::3 description grp3-rtr
  ...
  !
  address-family ipv4 unicast
@@ -347,18 +347,18 @@ router bgp 65000
   neighbor 172.30.0.1 soft-reconfiguration inbound
   neighbor 172.30.0.1 route-map PERMIT-SOME-ASN in
   neighbor 172.30.0.1 route-map NADA-IPv4 out
-  neighbor fd11:c858:0:1::1 activate
-  neighbor fd11:c858:0:1::1 soft-reconfiguration inbound
-  neighbor fd11:c858:0:1::1 route-map TODO-IPv6 in
-  neighbor fd11:c858:0:1::1 route-map TODO-IPv6 out
-  neighbor fd11:c858:0:1::2 activate
-  neighbor fd11:c858:0:1::2 soft-reconfiguration inbound
-  neighbor fd11:c858:0:1::2 route-map TODO-IPv6 in
-  neighbor fd11:c858:0:1::2 route-map TODO-IPv6 out
-  neighbor fd11:c858:0:1::3 activate
-  neighbor fd11:c858:0:1::3 soft-reconfiguration inbound
-  neighbor fd11:c858:0:1::3 route-map TODO-IPv6 in
-  neighbor fd11:c858:0:1::3 route-map TODO-IPv6 out
+  neighbor fd3a:d409:0:1::1 activate
+  neighbor fd3a:d409:0:1::1 soft-reconfiguration inbound
+  neighbor fd3a:d409:0:1::1 route-map TODO-IPv6 in
+  neighbor fd3a:d409:0:1::1 route-map TODO-IPv6 out
+  neighbor fd3a:d409:0:1::2 activate
+  neighbor fd3a:d409:0:1::2 soft-reconfiguration inbound
+  neighbor fd3a:d409:0:1::2 route-map TODO-IPv6 in
+  neighbor fd3a:d409:0:1::2 route-map TODO-IPv6 out
+  neighbor fd3a:d409:0:1::3 activate
+  neighbor fd3a:d409:0:1::3 soft-reconfiguration inbound
+  neighbor fd3a:d409:0:1::3 route-map TODO-IPv6 in
+  neighbor fd3a:d409:0:1::3 route-map TODO-IPv6 out
   ...
  exit-address-family
 !
@@ -433,32 +433,32 @@ hostname grpX-rtr
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd11:c858::1
+ipv6 route ::/0 fd3a:d409::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd11:c858:0:1::X/48
+ ipv6 address fd3a:d409:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd11:c858:X::1/64
+ ipv6 address fd3a:d409:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd11:c858:X:64::1/64
+ ipv6 address fd3a:d409:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd11:c858:X:128::1/64
+ ipv6 address fd3a:d409:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd11:c858:X:192::1/64
+ ipv6 address fd3a:d409:X:192::1/64
 !
 line vty
 !
@@ -488,32 +488,32 @@ rpki
 service integrated-vtysh-config
 !
 ip route 0.0.0.0/0 100.64.0.1
-ipv6 route ::/0 fd11:c858::1
+ipv6 route ::/0 fd3a:d409::1
 !
 interface eth0
  description "class backbone"
  ip address 100.64.1.X/22
- ipv6 address fd11:c858:0:1::X/48
+ ipv6 address fd3a:d409:0:1::X/48
 !
 interface eth1
  description "lan"
  ip address 100.100.X.1/26
- ipv6 address fd11:c858:X::1/64
+ ipv6 address fd3a:d409:X::1/64
 !
 interface eth2
  description "int"
  ip address 100.100.X.65/26
- ipv6 address fd11:c858:X:64::1/64
+ ipv6 address fd3a:d409:X:64::1/64
 !
 interface eth3
  description "dmz"
  ip address 100.100.X.129/26
- ipv6 address fd11:c858:X:128::1/64
+ ipv6 address fd3a:d409:X:128::1/64
 !
 interface eth4
  description "extra"
  ip address 100.100.X.193/26
- ipv6 address fd11:c858:X:192::1/64
+ ipv6 address fd3a:d409:X:192::1/64
 !
 router bgp 6500X
  bgp router-id 100.64.1.X
@@ -521,8 +521,8 @@ router bgp 6500X
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd11:c858::10 remote-as 65000
- neighbor fd11:c858::10 description iborder-rtr
+ neighbor fd3a:d409::10 remote-as 65000
+ neighbor fd3a:d409::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -532,10 +532,10 @@ router bgp 6500X
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd11:c858::10 activate
-  neighbor fd11:c858::10 soft-reconfiguration inbound
-  neighbor fd11:c858::10 route-map TODO-IPv6 in
-  neighbor fd11:c858::10 route-map TODO-IPv6 out
+  neighbor fd3a:d409::10 activate
+  neighbor fd3a:d409::10 soft-reconfiguration inbound
+  neighbor fd3a:d409::10 route-map TODO-IPv6 in
+  neighbor fd3a:d409::10 route-map TODO-IPv6 out
  exit-address-family
 !
 ip prefix-list DENY-ALL-IPv4 seq 5 deny any
@@ -628,8 +628,8 @@ router bgp 650XX
  no bgp default ipv4-unicast
  neighbor 100.64.0.10 remote-as 65000
  neighbor 100.64.0.10 description iborder-rtr
- neighbor fd11:c858::10 remote-as 65000
- neighbor fd11:c858::10 description iborder-rtr
+ neighbor fd3a:d409::10 remote-as 65000
+ neighbor fd3a:d409::10 description iborder-rtr
  !
  address-family ipv4 unicast
   neighbor 100.64.0.10 activate
@@ -639,10 +639,10 @@ router bgp 650XX
  exit-address-family
  !
  address-family ipv6 unicast
-  neighbor fd11:c858::10 activate
-  neighbor fd11:c858::10 soft-reconfiguration inbound
-  neighbor fd11:c858::10 route-map TODO-IPv6 in
-  neighbor fd11:c858::10 route-map TODO-IPv6 out
+  neighbor fd3a:d409::10 activate
+  neighbor fd3a:d409::10 soft-reconfiguration inbound
+  neighbor fd3a:d409::10 route-map TODO-IPv6 in
+  neighbor fd3a:d409::10 route-map TODO-IPv6 out
  exit-address-family
 ```
 
@@ -658,7 +658,7 @@ RIB entries 88, using 16 KiB of memory
 Peers 1, using 723 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-fd11:c858::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
+fd3a:d409::10   4      65000     15619     10555        0    0    0 01w0d01h           46       46 iborder-rtr
 
 Total number of neighbors 1
 ```
@@ -784,9 +784,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/34, version 32
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd11:c858::10
+  fd3a:d409::10
   65000 64135
-    fd11:c858::10 from fd11:c858::10 (100.64.0.10)
+    fd3a:d409::10 from fd3a:d409::10 (100.64.0.10)
     (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, valid, external, best (First path received), rpki validation-state: valid
       Last update: Tue Apr 26 23:21:23 2022
@@ -802,13 +802,13 @@ We access the client and perform a mtr (traceroute) to the same prefix (***2803:
 ```
 root@cli:~# mtr 2803:9910:8000::1
 
-cli.grpX.lac.te-labs.training (fd11:c858:X::2)                 2021-10-04T22:06:48+0000
+cli.grpX.lac.te-labs.training (fd3a:d409:X::2)                 2021-10-04T22:06:48+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd11:c858:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
- 2. fd11:c858::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
- 3. fd11:c858::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 1. fd3a:d409:1::1                            0.0%    10    0.1   0.1   0.1   0.1   0.0
+ 2. fd3a:d409::10                             0.0%    10    0.1   0.1   0.1   0.2   0.0
+ 3. fd3a:d409::1                              0.0%    10    0.1   0.1   0.1   0.1   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
@@ -837,12 +837,12 @@ Now we wait for the instructors to make some modifications... observing what hap
 - If nothing happened, try refreshing the mtr (*by pressing the letter "r"*)
 
 ```
-cli.grpX.lac.te-labs.training (fd11:c858:X::2)                 2021-10-04T22:25:36+0000
+cli.grpX.lac.te-labs.training (fd3a:d409:X::2)                 2021-10-04T22:25:36+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd11:c858:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
- 2. fd11:c858::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
+ 1. fd3a:d409:1::1                            0.0%   131    0.2   0.1   0.1   0.2   0.0
+ 2. fd3a:d409::10                             0.0%   130    0.2   0.1   0.1   0.2   0.1
  3. 2803:9910:8000::1                         0.0%   130    0.2   0.1   0.1   0.4   0.1
 ```
 
@@ -855,9 +855,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/48, version 155
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd11:c858:0:1::1 fd11:c858:0:1::2 fd11:c858:0:1::3 fd11:c858:0:1::4 fd11:c858:0:1::5
+  fd3a:d409:0:1::1 fd3a:d409:0:1::2 fd3a:d409:0:1::3 fd3a:d409:0:1::4 fd3a:d409:0:1::5
   65000 65002
-    fd11:c858:0:1::2 from fd11:c858:0:1::2 (100.64.1.2)
+    fd3a:d409:0:1::2 from fd3a:d409:0:1::2 (100.64.1.2)
     (fe80::216:3eff:fe8b:4d79) (used)
       Origin IGP, metric 0, valid, external, best (First path received), rpki validation-state: invalid
       Last update: Tue Apr 26 23:24:44 2022
@@ -880,7 +880,7 @@ We apply the "RPKI" filter that will only install in the BGP table the prefixes 
 grpX-rtr# conf t
 grpX-rtr(config)# router bgp 650XX
 grpX-rtr(config-router)# address-family ipv6 unicast
-grpX-rtr(config-router-af)# neighbor fd11:c858::10 route-map RPKI in
+grpX-rtr(config-router-af)# neighbor fd3a:d409::10 route-map RPKI in
 ```
 
 
@@ -892,9 +892,9 @@ grpX-rtr# sh bgp ipv6 unicast 2803:9910:8000::1
 BGP routing table entry for 2803:9910:8000::/34, version 125
 Paths: (1 available, best #1, table default)
   Advertised to non peer-group peers:
-  fd11:c858::10
+  fd3a:d409::10
   65000 64135
-    fd11:c858::10 from fd11:c858::10 (100.64.0.10)
+    fd3a:d409::10 from fd3a:d409::10 (100.64.0.10)
     (fe80::216:3eff:fecf:e070) (used)
       Origin IGP, localpref 200, valid, external, best (First path received), rpki validation-state: valid
       Last update: Wed Apr 27 00:03:42 2022
@@ -911,12 +911,12 @@ Paths: (1 available, best #1, table default)
 In the client we see the MTR again, if nothing changed try to refresh it (by pressing the letter "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd11:c858:X::2)                 2021-10-04T22:50:51+0000
+cli.grpX.lac.te-labs.training (fd3a:d409:X::2)                 2021-10-04T22:50:51+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd11:c858:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
- 2. fd11:c858::10                      				0.0%     8    0.2   0.1   0.1   0.2   0.0
+ 1. fd3a:d409:1::1                            0.0%     8    0.1   0.1   0.1   0.2   0.0
+ 2. fd3a:d409::10                      				0.0%     8    0.2   0.1   0.1   0.2   0.0
  3. 2803:9910:8000::1													0.0%     7    0.2   0.2   0.1   0.2   0.0
 
 ```
@@ -938,13 +938,13 @@ We access the client and see what is happening.
 If nothing changed, try to refresh it (by pressing the letter "r")
 
 ```
-cli.grpX.lac.te-labs.training (fd11:c858:X::2)                 2021-10-04T23:09:10+0000
+cli.grpX.lac.te-labs.training (fd3a:d409:X::2)                 2021-10-04T23:09:10+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd11:c858:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
- 2. fd11:c858::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
- 3. fd11:c858::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
+ 1. fd3a:d409:1::1                            0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 2. fd3a:d409::10                             0.0%    20    0.1   0.1   0.1   0.1   0.0
+ 3. fd3a:d409::1                              0.0%    20    0.1   0.1   0.1   0.2   0.0
  4. (waiting for reply)
  5. (waiting for reply)
  6. (waiting for reply)
