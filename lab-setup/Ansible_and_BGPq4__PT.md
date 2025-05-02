@@ -2,7 +2,7 @@
 
 ------
 
-***Criado e testado por Santiago Aggio e Nicolas Antoniello** (*@nantoniello*)
+***Criado e testado por Santiago Aggio e Nicolas Antoniello** (*@nantoniello)
 
 > (2022-10-03)
 
