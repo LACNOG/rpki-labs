@@ -63,7 +63,7 @@ Instalaremos la colección de Cisco ya que es la que utilizaremos en nuestro cas
 
 
 ```
-$ ansible-galaxy collection install cisco.ios
+$ ansible-galaxy collection install --force cisco.ios:4.6.1
 ```
 
 
