@@ -919,7 +919,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 
 
 
-### Los tutores procederán a habilitar filtros RPKI similares en el router iborder-rtr (ANS 65000)
+### Los tutores procederán a habilitar filtros RPKI similares en el router iborder-rtr (ASN 65000)
 
 Los tutores aplican el filtro RPKI en el router de borde.
 
@@ -959,5 +959,113 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 
 > Discutir como se resolvió el secuestro de rutas en este caso.
 
+
+
+## Filtrando *bogons* utilizando comunidades
+
+Vamos a utilizar el prefijo reservado ***64:ff9b::/96*** para NAT64 (RFC 6052) que se utiliza por ejemplo en redes IPV6-Mostly.
+
+Analizamos si nuestro router de borde tiene dicho prefijo en su tabla de rutas y de que forma:
+
+```
+grpX-rtr# sh bgp
+BGP table version is 245, local router ID is 100.64.1.X, vrf id 0
+Default local pref 100, local AS 6500X
+Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
+               i internal, r RIB-failure, S Stale, R Removed
+Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
+Origin codes:  i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+    Network          Next Hop            Metric LocPrf Weight Path
+N*> 64:ff9b::/96     fe80::216:3eff:fe03:340b
+                                                           0 65000 65002 i
+V*> 2001:7fb:ef00::/48
+                    fe80::216:3eff:fe03:340b
+                                                           0 65000 64135 264759 7049 7195 34549 58057 12654 i
+V*> 2001:7fb:ef01::/48
+                    fe80::216:3eff:fe03:340b
+                                                           0 65000 64135 264759 7049 7195 174 29169 34019 12654 i
+V*> 2001:7fb:ef02::/48
+                    fe80::216:3eff:fe03:340b
+                                                           0 65000 64135 264759 7049 7195 174 6453 35280 12654 i
+...
+```
+
+* ***¿Qué sucede con este prefijo?***
+
+Accedemos al cliente y realizamos un MTR a la dirección ***64:ff9b::1***
+
+```
+cli.grpX.lac.te-labs.training (fd47:d767:X::2)                 2026-05-25T15:02:47+0000
+Keys:  Help   Display mode   Restart statistics   Order of fields   quit
+                                               Packets               Pings
+ Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
+ 1. fd47:d767:3::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
+ 2. fd47:d767::10                            	0.0%     6    0.2   0.2   0.2   0.2   0.0
+ 3. 64:ff9b::1                               	0.0%     6    0.2   0.3   0.2   0.3   0.4
+
+```
+
+Regresamos al router y visualizamos el prefijo específico en nuestra tabla BGP
+
+```
+grpX-rtr# sh bgp ipv6 unicast 64:ff9b::/96
+BGP routing table entry for 64:ff9b::/96, version 244
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  fd47:d767::10
+  65000 65002
+    fd47:d767:0:1::2 from fd47:d767::10 (100.64.0.10)
+    (fe80::216:3eff:fe03:340b) (used)
+      Origin IGP, valid, external, best (First path received), rpki validation-state: not found
+      Last update: Mon May 25 15:00:29 2026
+
+```
+
+### Filtrando los bogons utilizando loos anuncios BGP publicados por el grp5-rtr (ASN 65005) marcados con comunidades especificas
+
+Ahora procederemos a realizar y aplicar un filtro BGP basado en la información de la lista que recibiremos, vía BGP, del router ***grp5-rtr*** (ASN 65005), que será nuestro servidor de prefijos bogons. Dichos prefijos bogons vendrán marcados con la comunidad ***65005:666***.
+
+
+
+#### Configuramos la sesión BGP con el servidor de bogons (**grp5-rtr**)
+
+Ahora configuramos una sesión BGP contra el servidor de bogons (***grp5-rtr***) cuyo ASN es ***65005***
+
+```
+router bgp 650XX
+ neighbor fd47:d767:0:1::5 remote-as 65005
+ neighbor fd47:d767:0:1::5 description servidor-de-bogons
+ address-family ipv6 unicast
+  neighbor fd47:d767:0:1::5 activate
+ exit-address-family
+```
+
+Verificamos que estamos recibiendo los prefijos del servidor de bogons
+
+```
+router bgp 650XX
+```
+
+
+
+#### Configuramos el filtrado
+
+El ***RFC 6666*** define el bloque ***100::/64*** para utilizar cuando quiero por ejemplo generar ***black holes***.
+
+Para ello, en nuestro router, primero creamos un ***black hole*** local para el prefijo ***100::/64***
+
+```
+ipv6 route 100::666/128 blackhole
+
+```
+
+Luego creamos una lista de comunidades donde permitimos la comunidad ***65005:666***
+
+```
+bgp community-list standard 10 permit 65005:666
+
+```
 
 
