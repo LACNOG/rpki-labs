@@ -1001,7 +1001,7 @@ cli.grpX.lac.te-labs.training (fd47:d767:X::2)                 2026-05-25T15:02:
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd47:d767:3::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
+ 1. fd47:d767:X::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
  2. fd47:d767::10                            	0.0%     6    0.2   0.2   0.2   0.2   0.0
  3. 64:ff9b::1                               	0.0%     6    0.2   0.3   0.2   0.3   0.4
 
@@ -1126,7 +1126,7 @@ cli.grpX.lac.te-labs.training (fd47:d767:X::2)                 2026-05-25T15:02:
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd47:d767:3::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
+ 1. fd47:d767:X::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
  2. fd47:d767::10                            	0.0%     6    0.2   0.2   0.2   0.2   0.0
  3. 64:ff9b::1                               	0.0%     6    0.2   0.3   0.2   0.3   0.4
 
