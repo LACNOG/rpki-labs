@@ -963,7 +963,7 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 
 ## Filtrando *bogons* utilizando comunidades
 
-Vamos a utilizar el prefijo reservado ***64:ff9b::/96*** para NAT64 (RFC 6052) que se utiliza por ejemplo en redes IPV6-Mostly.
+Vamos a utilizar el prefijo reservado **64:ff9b::/96** para NAT64 (RFC 6052) que se utiliza por ejemplo en redes IPV6-Mostly.
 
 Analizamos si nuestro router de borde tiene dicho prefijo en su tabla de rutas y de que forma:
 
@@ -994,7 +994,7 @@ V*> 2001:7fb:ef02::/48
 
 * ***¿Qué sucede con este prefijo?***
 
-Accedemos al cliente y realizamos un MTR a la dirección ***64:ff9b::1***
+Accedemos al cliente y realizamos un MTR a la dirección **64:ff9b::1**
 
 ```
 cli.grpX.lac.te-labs.training (fd47:d767:X::2)                 2026-05-25T15:02:47+0000
@@ -1040,6 +1040,8 @@ router bgp 650XX
  address-family ipv6 unicast
   neighbor fd47:d767:0:1::5 activate
   neighbor fd47:d767:0:1::5 soft-reconfiguration inbound
+  neighbor fd47:d767:0:1::5 route-map TODO-IPv6 in
+  neighbor fd47:d767:0:1::5 route-map NADA-IPv6 out
  exit-address-family
 ```
 
@@ -1094,41 +1096,19 @@ Volvemos a visualizar la tabla de rutas BGP
 
 ```
 grpX-rtr# sh bgp
-BGP table version is 245, local router ID is 100.64.1.X, vrf id 0
-Default local pref 100, local AS 6500X
-Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
-               i internal, r RIB-failure, S Stale, R Removed
-Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
-Origin codes:  i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
 
-    Network          Next Hop            Metric LocPrf Weight Path
-N*> 64:ff9b::/96     fe80::216:3eff:fe03:340b
-                                                           0 65000 65002 i
-V*> 2001:7fb:ef00::/48
-                    fe80::216:3eff:fe03:340b
-                                                           0 65000 64135 264759 7049 7195 34549 58057 12654 i
-V*> 2001:7fb:ef01::/48
-                    fe80::216:3eff:fe03:340b
-                                                           0 65000 64135 264759 7049 7195 174 29169 34019 12654 i
-V*> 2001:7fb:ef02::/48
-                    fe80::216:3eff:fe03:340b
-                                                           0 65000 64135 264759 7049 7195 174 6453 35280 12654 i
 ...
 ```
 
 
 
-Accedemos nuevamente al cliente y realizamos un MTR a la dirección ***64:ff9b::1***
+Accedemos nuevamente al cliente y realizamos un MTR a la dirección **64:ff9b::1**
 
 ```
 cli.grpX.lac.te-labs.training (fd47:d767:X::2)                 2026-05-25T15:02:47+0000
 Keys:  Help   Display mode   Restart statistics   Order of fields   quit
                                                Packets               Pings
  Host                                        Loss%   Snt   Last   Avg  Best  Wrst StDev
- 1. fd47:d767:X::1                           	0.0%     6    0.2   0.2   0.1   0.2   0.0
- 2. fd47:d767::10                            	0.0%     6    0.2   0.2   0.2   0.2   0.0
- 3. 64:ff9b::1                               	0.0%     6    0.2   0.3   0.2   0.3   0.4
 
 ```
 
