@@ -10,7 +10,7 @@
 ***Erika Vega,***
 ***Silvia Chavez***
 
-> Actualizado: (2026-06-23)
+> Actualizado: (2026-07-07)
 
 ------
 
