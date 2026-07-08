@@ -1025,7 +1025,7 @@ Paths: (1 available, best #1, table default)
 
 ### Filtrando los bogons utilizando los anuncios BGP publicados por el grp5-rtr (ASN 65005) marcados con comunidades específicas
 
-Ahora procederemos a realizar y aplicar un filtro BGP basado en la información de la lista que recibiremos, vía BGP, del router ***grp5-rtr*** (ASN 65005), que será nuestro servidor de prefijos bogons. Dichos prefijos bogons vendrán marcados con la comunidad ***65005:666***.
+Ahora procederemos a realizar y aplicar un filtro BGP basado en la información de la lista que recibiremos, vía BGP, del router ***grp5-rtr*** (ASN 65005), que será nuestro servidor de prefijos bogons. Dichos prefijos bogons vendrán marcados con la comunidad ***65005:888***.
 
 
 
@@ -1064,10 +1064,10 @@ Para ello, en nuestro router, primero creamos un ***black hole*** local para el 
 ipv6 route 100::666/128 blackhole
 ```
 
-Luego creamos una lista de comunidades donde permitimos la comunidad ***65005:666***
+Luego creamos una lista de comunidades donde permitimos la comunidad ***65005:888***
 
 ```
-bgp community-list standard 10 permit 65005:666
+bgp community-list standard 10 permit 65005:888
 ```
 
 Ahora crearemos un route-map a utilizar con ese prefijo
